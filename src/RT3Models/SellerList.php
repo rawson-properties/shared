@@ -30,4 +30,9 @@ class SellerList extends Model
     {
         return $this->hasOne(Office::class, 'ID', 'OFFICEID');
     }
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class, 'PROPERTYID', 'ID');
+    }
 }

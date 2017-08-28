@@ -26,6 +26,56 @@ class Hubspot
         ];
     }
 
+    public static function makeProperties(array $properties): array
+    {
+        $return = [];
+        foreach ($properties as $k => $v) {
+            $return[] = self::makeProperty($k, $v);
+        }
+
+        return $return;
+    }
+
+    public static function mergeMultiString(string $first, string $second): string
+    {
+        $first = collect(explode(';', $first));
+        $second = collect(explode(';', $second));
+
+        $merge = $first->merge($second)->unique()->implode(';');
+        return trim($merge, ';');
+    }
+
+    public static function getContactProperties(string $email): array
+    {
+        try {
+            $hubspot = new self();
+            $rawProperties = object_get($hubspot->api->contacts()->getByEmail($email), 'data.properties');
+        } catch (BadRequest $e) {
+            // 404 is fine, just return empty.
+            if ($e->getCode() == 404) {
+                return [];
+            }
+
+            throw $e;
+        }
+
+        $properties = [];
+        foreach ($rawProperties as $key => $data) {
+            $properties[$key] = $data->value;
+        }
+
+        return $properties;
+    }
+
+    public static function getContactByID(int $vid): StdClass
+    {
+        return Cache::remember(self::key([ 'getContactByID', $vid, ]), 10, function () use ($vid) {
+            $h = new self();
+            $response = $h->api->contacts()->getById($vid);
+            return $response->data;
+        });
+    }
+
     public static function ensurePropertyOptionExists(string $name, string $value): string
     {
         $hubspot = new self();
@@ -45,16 +95,6 @@ class Hubspot
         }
 
         return $options->implode(';');
-    }
-
-    public static function makeProperties(array $properties): array
-    {
-        $return = [];
-        foreach ($properties as $k => $v) {
-            $return[] = self::makeProperty($k, $v);
-        }
-
-        return $return;
     }
 
     private static function makeOptions(Collection $options): Collection

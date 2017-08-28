@@ -9,4 +9,14 @@ class Office extends Model
         'CREATED',
         'UPDATED',
     ];
+
+    public function franchise()
+    {
+        return $this->belongsTo(Franchise::class, 'FRANCHISEID', 'ID');
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(PhysicalAddress::class, 'PHYSICALADDRESSID', 'ID');
+    }
 }
