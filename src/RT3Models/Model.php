@@ -2,6 +2,7 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use App;
 use Exception;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
@@ -9,6 +10,8 @@ class Model extends BaseModel
 {
     protected $primaryKey = 'ID';
     protected $connection = 'rt3';
+
+    public $timestamps = false;
 
     public static function disabled()
     {
@@ -18,16 +21,28 @@ class Model extends BaseModel
     // Disable all the methods that may write data (which we don't want)
     public static function create(array $attributes = [])
     {
-        self::disabled();
+        if (App::environment('testing')) {
+            parent::create($attributes);
+        } else {
+            self::disabled();
+        }
     }
 
     public function save(array $options = [])
     {
-        self::disabled();
+        if (App::environment('testing')) {
+            parent::save($options);
+        } else {
+            self::disabled();
+        }
     }
 
     public function update(array $attributes = [], array $options = [])
     {
-        self::disabled();
+        if (App::environment('testing')) {
+            parent::update($attributes, $options);
+        } else {
+            self::disabled();
+        }
     }
 }
