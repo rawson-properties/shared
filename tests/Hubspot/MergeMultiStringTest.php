@@ -3,9 +3,9 @@
 namespace Rawson\Shared\Tests\Hubspot;
 
 use Rawson\Shared\Libs\Hubspot;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class MergeMultiStringTest extends PHPUnit_Framework_TestCase
+class MergeMultiStringTest extends TestCase
 {
     public function testMergeMultiString()
     {

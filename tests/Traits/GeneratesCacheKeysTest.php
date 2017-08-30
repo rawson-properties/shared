@@ -3,9 +3,9 @@
 namespace Rawson\Shared\Tests\Traits;
 
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class GeneratesCacheKeysTest extends PHPUnit_Framework_TestCase
+class GeneratesCacheKeysTest extends TestCase
 {
     use GeneratesCacheKeys;
 
