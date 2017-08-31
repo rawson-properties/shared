@@ -7,6 +7,11 @@ class CreateRT3Tables extends Migration
 {
     public function up()
     {
+        // Dusk doesn't seem to drop tables, so assume we have them all if this exists.
+        if (Schema::connection('rt3')->hasTable('achieverstatus')) {
+            return;
+        }
+
         Schema::connection('rt3')->create('achieverstatus', function (Blueprint $table) {
             $table->bigInteger('ID', true);
             $table->string('ITEM', 25)->unique();
