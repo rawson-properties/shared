@@ -107,6 +107,26 @@ class Hubspot
         });
     }
 
+    public static function getOwnerIDFromEmail(string $email): ?int
+    {
+        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, ]);
+        $owners = Cache::remember($key, 15, function () use ($email) {
+            $h = new self();
+            $response = $h->api->owners()->all([
+                'email' => $email,
+                'includeInactive' => false,
+            ]);
+
+            return object_get($response, 'data', []);
+        });
+
+        if (count($owners) < 1) {
+            return null;
+        }
+
+        return object_get($owners[0], 'ownerId');
+    }
+
     /*
      * Try to parse the full message in BadRequest for useful detail
      */
