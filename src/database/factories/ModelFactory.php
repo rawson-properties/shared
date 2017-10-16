@@ -9,12 +9,16 @@ use Rawson\Shared\RT3Models\FranchiseClassification;
 use Rawson\Shared\RT3Models\FranchiseStatus;
 use Rawson\Shared\RT3Models\JobTitle;
 use Rawson\Shared\RT3Models\MandateType;
+use Rawson\Shared\RT3Models\MunicipalArea;
+use Rawson\Shared\RT3Models\MunicipalAreaDefinition;
 use Rawson\Shared\RT3Models\Office;
 use Rawson\Shared\RT3Models\OfficeStatus;
 use Rawson\Shared\RT3Models\Person;
 use Rawson\Shared\RT3Models\Property;
+use Rawson\Shared\RT3Models\Province;
 use Rawson\Shared\RT3Models\SellerList;
 use Rawson\Shared\RT3Models\SellerListStatus;
+use Rawson\Shared\RT3Models\Suburb;
 use Rawson\Shared\RT3Models\Stakeholder;
 use Rawson\Shared\RT3Models\StakeholderStatus;
 use Rawson\Shared\RT3Models\StakeholderType;
@@ -105,7 +109,7 @@ $factory->define(SellerList::class, function (Generator $faker) {
 $factory->state(SellerList::class, 'full', function (Generator $faker) {
     return [
         'PROPERTYID' => function () {
-            return factory(Property::class)->create()->ID;
+            return factory(Property::class)->states('full')->create()->ID;
         },
         'OFFICEID' => function () {
             return factory(Office::class)->states('full')->create()->ID;
@@ -170,7 +174,7 @@ $factory->define(Property::class, function (Generator $faker) {
         'NUMPARKING' => null,
         'NUMFLATLETS' => null,
         'PROPERTYTITLETYPEID' => 0,
-        'PHYSICALADDRESSID' => 0,
+        'PHYSICALADDRESSID' => null,
         'UNITNAME' => null,
         'UNITNUMBER' => null,
         'STREETNUMBER' => null,
@@ -189,6 +193,57 @@ $factory->define(Property::class, function (Generator $faker) {
         'NAME' => null,
         'CREATED' => $faker->dateTime(),
         'UPDATED' => $faker->dateTime(),
+    ];
+});
+
+$factory->state(Property::class, 'full', function (Generator $faker) {
+    return [
+        'PHYSICALADDRESSID' => function () {
+            return factory(MunicipalAreaDefinition::class)->states('full')->create()->ID;
+        },
+    ];
+});
+
+$factory->define(MunicipalAreaDefinition::class, function (Generator $faker) {
+    return [
+        'P24ID' => null,
+        'PROVINCEID' => null,
+        'MUNICIPALAREAID' => null,
+        'SUBURBID' => null,
+        'POSTALCODEID' => null,
+    ];
+});
+
+$factory->state(MunicipalAreaDefinition::class, 'full', function (Generator $faker) {
+    return [
+        'PROVINCEID' => function () {
+            return factory(Province::class)->create()->ID;
+        },
+        'MUNICIPALAREAID' => function () {
+            return factory(MunicipalArea::class)->create()->ID;
+        },
+        'SUBURBID' => function () {
+            return factory(Suburb::class)->create()->ID;
+        },
+        'POSTALCODEID' => 0,
+    ];
+});
+
+$factory->define(Province::class, function (Generator $faker) {
+    return [
+        'ITEM' => $faker->state,
+    ];
+});
+
+$factory->define(MunicipalArea::class, function (Generator $faker) {
+    return [
+        'ITEM' => $faker->state,
+    ];
+});
+
+$factory->define(Suburb::class, function (Generator $faker) {
+    return [
+        'ITEM' => $faker->state,
     ];
 });
 
