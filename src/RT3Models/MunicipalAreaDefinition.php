@@ -11,4 +11,14 @@ class MunicipalAreaDefinition extends Model
     {
         return $this->hasOne(Province::class, 'ID', 'PROVINCEID');
     }
+
+    public function suburb()
+    {
+        return $this->hasOne(Suburb::class, 'ID', 'SUBURBID');
+    }
+
+    public function municipalArea()
+    {
+        return $this->hasOne(MunicipalArea::class, 'ID', 'MUNICIPALAREAID');
+    }
 }

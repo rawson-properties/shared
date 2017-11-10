@@ -14,6 +14,11 @@ class Agent extends Model
         return $this->employee->person->FULLNAME;
     }
 
+    public function getEmail(): string
+    {
+        return $this->employee->person->EMAIL;
+    }
+
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'EMPLOYEEID', 'ID');
