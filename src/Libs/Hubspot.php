@@ -36,13 +36,13 @@ class Hubspot
         return $return;
     }
 
-    public static function mergeMultiString(string $first, string $second): string
+    public static function mergeMultiString(string $first, string $second, string $glue = ';'): string
     {
-        $first = collect(explode(';', $first));
-        $second = collect(explode(';', $second));
+        $first = collect(explode($glue, $first));
+        $second = collect(explode($glue, $second));
 
-        $merge = $first->merge($second)->unique()->implode(';');
-        return trim($merge, ';');
+        $merge = $first->merge($second)->unique()->implode($glue);
+        return trim($merge, $glue);
     }
 
     public static function getContactProperties(string $email): array
