@@ -67,6 +67,43 @@ class Hubspot
         return $properties;
     }
 
+    /*
+     * Jump through a bunch of hoops so that if the contact exists we
+     * don't flatten existing values.
+     */
+    public static function mergeIfExists(array $contact): array
+    {
+        $existing = self::getContactProperties(array_get($contact, 'email'));
+        if (!$existing) {
+            return $contact;
+        }
+
+        $fieldsToMerge = [
+            'lead_type',
+            'linked_agents',
+            'linked_office',
+            'lead_source',
+        ];
+
+        foreach ($fieldsToMerge as $e) {
+            if (array_get($contact, $e) || array_get($existing, $e)) {
+                $contact[$e] = self::mergeMultiString(array_get($contact, $e, ''), array_get($existing, $e, ''));
+            }
+        }
+
+        if (array_get($contact, 'enquiry_listing_references') || array_get($existing, 'enquiry_listing_references')) {
+            $contact['enquiry_listing_references'] = self::mergeMultiString(
+                array_get($contact, 'enquiry_listing_references', ''),
+                array_get($existing, 'enquiry_listing_references', ''),
+                ','
+            );
+        }
+
+        $contact['newsletter'] = (array_get($contact, 'newsletter') == 'Yes' || array_get($existing, 'newsletter') == 'Yes') ? 'Yes' : 'No';
+
+        return $contact;
+    }
+
     public static function getContactByID(int $vid): StdClass
     {
         return Cache::remember(self::key([ 'getContactByID', $vid, ]), 10, function () use ($vid) {
