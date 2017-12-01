@@ -9,7 +9,6 @@ class RawsonSharedServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/hubspot.php', 'hubspot');
     }
 
     public function boot()
