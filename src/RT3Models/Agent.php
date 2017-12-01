@@ -2,12 +2,19 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Rawson\Shared\Libs\Hubspot;
+
 class Agent extends Model
 {
     protected $table = 'agentlist';
     protected $dates = [
         'UPDATED',
     ];
+
+    public function getHubspotOwnerID(): ?int
+    {
+        return Hubspot::getOwnerIDFromEmail($this->getEmail());
+    }
 
     public function getName(): string
     {

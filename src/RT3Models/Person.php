@@ -10,10 +10,32 @@ class Person extends Model
         'UPDATED',
     ];
 
+    protected $defaultAgent = false;
+
+    public function getDefaultAgentAttribute(): ?Agent
+    {
+        if ($this->defaultAgent === false) {
+            $this->defaultAgent = $this
+                ->agents()
+                ->where('agentlist.ACTIVE', 'y')
+                ->where('personagentlist.ACTIVE', 'y')
+                ->orderBy('agentlist.DEFAULTOFFICE', 'DESC')
+                ->first()
+                ;
+        }
+
+        return $this->defaultAgent;
+    }
+
     // Relations
     public function title()
     {
         return $this->belongsTo(Title::class, 'TITLEID', 'ID');
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'PERSONID');
     }
 
     /* @UNUSED
