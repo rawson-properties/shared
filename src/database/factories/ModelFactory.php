@@ -1,9 +1,12 @@
 <?php
 
+use Rawson\Shared\RT3Models\Agent;
 use Rawson\Shared\RT3Models\Bank;
 use Rawson\Shared\RT3Models\BusinessType;
 use Rawson\Shared\RT3Models\BuyerList;
 use Rawson\Shared\RT3Models\BuyerListStatus;
+use Rawson\Shared\RT3Models\Employee;
+use Rawson\Shared\RT3Models\EmployeeStatus;
 use Rawson\Shared\RT3Models\Franchise;
 use Rawson\Shared\RT3Models\FranchiseClassification;
 use Rawson\Shared\RT3Models\FranchiseStatus;
@@ -23,6 +26,56 @@ use Rawson\Shared\RT3Models\Stakeholder;
 use Rawson\Shared\RT3Models\StakeholderStatus;
 use Rawson\Shared\RT3Models\StakeholderType;
 use Faker\Generator;
+
+$factory->define(Agent::class, function (Generator $faker) {
+    return [
+        'OFFICEID' => null,
+        'EMPLOYEEID' => null,
+        'LISTINGACCESSID' => 1,
+        'LISTINGIMAGEACCESS' => 'y',
+        'BUYERACCESS' => 'y',
+        'COMMSPLIT' => '50.00',
+        'BONDCOMMSPLIT' => '0.00',
+        'LETTINGAGENT' => 'n',
+        'LISTINGAGENT' => 'y',
+        'ACTIVE' => 'y',
+        'DEDUCTFRFEE' => 'y',
+        'OFFICEADMIN' => 'n',
+        'P24AGENTID' => null,
+        'PgenieAgentId' => null,
+        'NotifySaleSuspensive' => 'n',
+        'NotifySaleFinal' => 'n',
+        'NotifySaleClose' => 'n',
+        'NotifySaleActivitiesExpire' => 'y',
+        'RAP' => 'y',
+        'NotifyRAP' => 'y',
+        'NotifyReferral' => 'y',
+        'DEFAULTOFFICE' => 'y',
+        'SALEACCESS'=> 'y',
+        'LISTINGREPORTACCESS' => 'y',
+        'BUYERREPORTACCESS' => 'y',
+        'RAPREPORTACCESS' => 'n',
+        'SALEREPORTACCESS' => 'y',
+        'REFERRALREPORTACCESS' => 'n',
+        'NOTIFYWEBSMSNOTIFICATION' => 'n',
+        'UPDATED' => $faker->dateTime(),
+    ];
+});
+
+$factory->define(Employee::class, function (Generator $faker) {
+    return [
+        'PERSONID' => null,
+        'EMPLOYEESTATUSID' => EmployeeStatus::ACTIVE,
+        'TAXRATE' => '0.00',
+        'FFCNO' => null,
+        'FFCSTATUS' => null,
+        'BVRNO' => null,
+        'BVRDATE' => null,
+        'EMPLOYEEEECLASSIFICATIONID' => null,
+        'PRIVYSEAL' => null,
+        'UPDATED' => $faker->dateTime(),
+    ];
+});
 
 $factory->define(Person::class, function (Generator $faker) {
     $faker->addProvider(new Faker\Provider\en_ZA\PhoneNumber($faker));
