@@ -53,3 +53,39 @@ if (!function_exists('sa_id_to_date')) {
         return $date;
     }
 }
+
+if (!function_exists('extract_xml_tags')) {
+    /**
+     * @param string $xml
+     * @param string $tag
+     * @return array
+     */
+    function extract_xml_tags($xml, $tag)
+    {
+        $tag = strtolower($tag);
+        $p = xml_parser_create();
+        xml_parse_into_struct($p, $xml, $values, $index);
+        xml_parser_free($p);
+        $items = [];
+        $open = false;
+        foreach ($values as $index => $value) {
+            if (strtolower(array_get($value, 'tag')) === $tag && array_get($value, 'type') === 'open') {
+                $open = true;
+                $item = [];
+            }
+
+            if (strtolower(array_get($value, 'tag')) === $tag && array_get($value, 'type') === 'close') {
+                $open = false;
+                $items[] = $item;
+            }
+
+            if ($open === true && array_get($value, 'type') === 'complete') {
+                $k = strtolower(array_get($value, 'tag'));
+                $v = trim(array_get($value, 'value'));
+                $item[$k] = $v;
+            }
+        }
+
+        return $items;
+    }
+}
