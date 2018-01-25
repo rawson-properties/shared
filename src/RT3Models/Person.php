@@ -20,6 +20,7 @@ class Person extends Model
                 ->where('agentlist.ACTIVE', 'y')
                 ->where('personagentlist.ACTIVE', 'y')
                 ->orderBy('agentlist.DEFAULTOFFICE', 'DESC')
+                ->orderBy('personagentlist.CREATED', 'DESC')
                 ->first()
                 ;
         }
