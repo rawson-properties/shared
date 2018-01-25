@@ -144,11 +144,11 @@ class Hubspot
         });
     }
 
-    public static function getOwnerIDFromEmail(string $email): ?int
+    public static function getOwnerIDFromEmail(string $email, string $apiKey = null): ?int
     {
-        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, ]);
-        $owners = Cache::remember($key, 15, function () use ($email) {
-            $h = new self();
+        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $apiKey, ]);
+        $owners = Cache::remember($key, 15, function () use ($email, $apiKey) {
+            $h = new self($apiKey);
             $response = $h->api->owners()->all([
                 'email' => $email,
                 'includeInactive' => false,

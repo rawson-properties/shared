@@ -9,6 +9,9 @@ class RawsonSharedServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->commands([
+            \Rawson\Shared\Commands\HubgluePing::class,
+        ]);
     }
 
     public function boot()
