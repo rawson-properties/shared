@@ -13,4 +13,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Person::class, 'PERSONID', 'ID');
     }
+
+    public function agents()
+    {
+        return $this->hasMany(Agent::class, 'EMPLOYEEID', 'ID');
+    }
 }
