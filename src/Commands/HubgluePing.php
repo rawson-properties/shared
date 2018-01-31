@@ -2,7 +2,6 @@
 
 namespace Rawson\Shared\Commands;
 
-use Artisan;
 use Illuminate\Console\Command;
 use Rawson\Shared\Libs\Hubglue;
 
