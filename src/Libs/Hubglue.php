@@ -32,7 +32,7 @@ class Hubglue
             ]);
 
             $json = json_decode((string) $response->getBody());
-            return $json->access_token;
+            return object_get($json, 'access_token');
         });
     }
 
