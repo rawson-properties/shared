@@ -11,11 +11,6 @@ class Agent extends Model
         'UPDATED',
     ];
 
-    public function getHubspotOwnerID(): ?int
-    {
-        return Hubspot::getOwnerIDFromEmail($this->getEmail());
-    }
-
     public function getName(): string
     {
         return $this->employee->person->FULLNAME;
