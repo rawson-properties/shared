@@ -89,7 +89,7 @@ class Hubspot
 
         foreach ($fieldsToMerge as $e) {
             if (array_get($contact, $e) || array_get($existing, $e)) {
-                $contact[$e] = self::mergeMultiString(array_get($contact, $e, ''), array_get($existing, $e, ''));
+                $contact[$e] = self::mergeMultiString(array_get($contact, $e) ?: '', array_get($existing, $e) ?: '');
             }
         }
 
