@@ -83,6 +83,8 @@ class Hubspot
             'linked_agents',
             'linked_office',
             'lead_source',
+            'property_24_references',
+            'private_property_references',
         ];
 
         foreach ($fieldsToMerge as $e) {
@@ -91,6 +93,7 @@ class Hubspot
             }
         }
 
+        // Do this separately because the glue is , not ;
         if (array_get($contact, 'enquiry_listing_references') || array_get($existing, 'enquiry_listing_references')) {
             $contact['enquiry_listing_references'] = self::mergeMultiString(
                 array_get($contact, 'enquiry_listing_references', ''),
