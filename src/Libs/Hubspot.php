@@ -18,11 +18,6 @@ class Hubspot
 
     public $api;
 
-    private static function keyGetContactPropertyOptions(string $name): string
-    {
-        return self::key([ 'getContactPropertyOptions', $name, ], [ $this->api->client->key, ]);
-    }
-
     private static function makeOptions(Collection $options): Collection
     {
         return $options->map(function ($e) {
@@ -111,6 +106,11 @@ class Hubspot
         $this->api = HubspotFactory::create($key ?: config('hubspot.key'));
     }
 
+    private function keyGetContactPropertyOptions(string $name): string
+    {
+        return self::key([ 'getContactPropertyOptions', $name, ], [ $this->api->client->key, ]);
+    }
+
     public function contactPropertyHasOption(string $name, string $option): bool
     {
         return $this->getContactPropertyOptions($name)->contains($option);
@@ -118,7 +118,7 @@ class Hubspot
 
     public function getContactPropertyOptions(string $name): Collection
     {
-        return Cache::remember(self::keyGetContactPropertyOptions($name), 60, function () use ($name) {
+        return Cache::remember($this->keyGetContactPropertyOptions($name), 60, function () use ($name) {
             $response = $this->api->contactProperties()->get($name);
             return collect($response->options)->pluck('value');
         });
@@ -145,7 +145,7 @@ class Hubspot
         unset($data->mutableDefinitionNotDeletable);
         unset($data->hidden);
 
-        Cache::forget(self::keyGetContactPropertyOptions($name));
+        Cache::forget($this->keyGetContactPropertyOptions($name));
 
         $data->options = self::makeOptions($options->push($option)->unique()->values());
         return $this->api->contactProperties()->update($name, (array) $data);
