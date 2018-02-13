@@ -9,6 +9,8 @@ class RawsonSharedServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__ . '/config/hubspot.php', 'hubspot');
+
         $this->commands([
             \Rawson\Shared\Commands\HubgluePing::class,
         ]);

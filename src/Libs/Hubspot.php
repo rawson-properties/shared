@@ -18,6 +18,21 @@ class Hubspot
 
     public $api;
 
+    private static function keyGetContactPropertyOptions(string $name): string
+    {
+        return self::key([ 'getContactPropertyOptions', $name, ], [ $this->api->client->key, ]);
+    }
+
+    private static function makeOptions(Collection $options): Collection
+    {
+        return $options->map(function ($e) {
+            return [
+                'label' => $e,
+                'value' => $e,
+            ];
+        });
+    }
+
     public static function makeProperty(string $name, $value): StdClass
     {
         return (object) [
@@ -43,128 +58,6 @@ class Hubspot
 
         $merge = $first->merge($second)->unique()->implode($glue);
         return trim($merge, $glue);
-    }
-
-    public static function getContactProperties(string $email): array
-    {
-        try {
-            $hubspot = new self();
-            $rawProperties = object_get($hubspot->api->contacts()->getByEmail($email), 'data.properties');
-        } catch (BadRequest $e) {
-            // 404 is fine, just return empty.
-            if ($e->getCode() == 404) {
-                return [];
-            }
-
-            throw $e;
-        }
-
-        $properties = [];
-        foreach ($rawProperties as $key => $data) {
-            $properties[$key] = $data->value;
-        }
-
-        return $properties;
-    }
-
-    /*
-     * Jump through a bunch of hoops so that if the contact exists we
-     * don't flatten existing values.
-     */
-    public static function mergeIfExists(array $contact): array
-    {
-        $existing = self::getContactProperties(array_get($contact, 'email'));
-        if (!$existing) {
-            return $contact;
-        }
-
-        $fieldsToMerge = [
-            'lead_type',
-            'linked_agents',
-            'linked_office',
-            'lead_source',
-            'property_24_references',
-            'private_property_references',
-        ];
-
-        foreach ($fieldsToMerge as $e) {
-            if (array_get($contact, $e) || array_get($existing, $e)) {
-                $contact[$e] = self::mergeMultiString(array_get($contact, $e) ?: '', array_get($existing, $e) ?: '');
-            }
-        }
-
-        // Do this separately because the glue is , not ;
-        if (array_get($contact, 'enquiry_listing_references') || array_get($existing, 'enquiry_listing_references')) {
-            $contact['enquiry_listing_references'] = self::mergeMultiString(
-                array_get($contact, 'enquiry_listing_references', ''),
-                array_get($existing, 'enquiry_listing_references', ''),
-                ','
-            );
-        }
-
-        $contact['newsletter'] = (array_get($contact, 'newsletter') == 'Yes' || array_get($existing, 'newsletter') == 'Yes') ? 'Yes' : 'No';
-
-        return $contact;
-    }
-
-    public static function getContactByID(int $vid): StdClass
-    {
-        return Cache::remember(self::key([ 'getContactByID', $vid, ]), 10, function () use ($vid) {
-            $h = new self();
-            $response = $h->api->contacts()->getById($vid);
-            return $response->data;
-        });
-    }
-
-    public static function ensurePropertyOptionExists(string $name, string $value): string
-    {
-        $hubspot = new self();
-        if (!$hubspot->contactPropertyHasOption($name, $value)) {
-            $hubspot->addContactPropertyOption($name, $value);
-        }
-
-        return $value;
-    }
-
-    public static function makeMultiString(string $name, Collection $options, bool $validate = true): string
-    {
-        if ($validate) {
-            $options->each(function ($e) use ($name) {
-                Hubspot::ensurePropertyOptionExists($name, $e);
-            });
-        }
-
-        return $options->implode(';');
-    }
-
-    private static function makeOptions(Collection $options): Collection
-    {
-        return $options->map(function ($e) {
-            return [
-                'label' => $e,
-                'value' => $e,
-            ];
-        });
-    }
-
-    public static function getOwnerIDFromEmail(string $email, string $apiKey = null): ?int
-    {
-        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $apiKey, ]);
-        $owners = Cache::remember($key, 15, function () use ($email, $apiKey) {
-            $h = new self($apiKey);
-            $response = $h->api->owners()->all([
-                'email' => $email,
-                'includeInactive' => false,
-            ]);
-
-            return object_get($response, 'data', []);
-        });
-
-        if (count($owners) < 1) {
-            return null;
-        }
-
-        return object_get($owners[0], 'ownerId');
     }
 
     /*
@@ -215,8 +108,7 @@ class Hubspot
 
     public function __construct(string $key = null)
     {
-        // @TODO: Maybe update this to be config('hubspot.key') if the package registers config?
-        $this->api = HubspotFactory::create($key ?: config('services.hubspot.key'));
+        $this->api = HubspotFactory::create($key ?: config('hubspot.key'));
     }
 
     public function contactPropertyHasOption(string $name, string $option): bool
@@ -226,7 +118,7 @@ class Hubspot
 
     public function getContactPropertyOptions(string $name): Collection
     {
-        return Cache::remember(self::key([ 'getContactPropertyOptions', $name, ]), 60, function () use ($name) {
+        return Cache::remember(self::keyGetContactPropertyOptions($name), 60, function () use ($name) {
             $response = $this->api->contactProperties()->get($name);
             return collect($response->options)->pluck('value');
         });
@@ -253,9 +145,120 @@ class Hubspot
         unset($data->mutableDefinitionNotDeletable);
         unset($data->hidden);
 
-        Cache::forget(self::key([ 'getContactPropertyOptions', $name, ]));
+        Cache::forget(self::keyGetContactPropertyOptions($name));
 
         $data->options = self::makeOptions($options->push($option)->unique()->values());
         return $this->api->contactProperties()->update($name, (array) $data);
+    }
+
+    public function getOwnerIDFromEmail(string $email): ?int
+    {
+        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $this->api->client->key, ]);
+        $owners = Cache::remember($key, 15, function () use ($email) {
+            $response = $this->api->owners()->all([
+                'email' => $email,
+                'includeInactive' => false,
+            ]);
+
+            return object_get($response, 'data', []);
+        });
+
+        if (count($owners) < 1) {
+            return null;
+        }
+
+        return object_get($owners[0], 'ownerId');
+    }
+
+    public function getContactProperties(string $email): array
+    {
+        try {
+            $response = $this->api->contacts()->getByEmail($email);
+            $rawProperties = object_get($response, 'data.properties');
+        } catch (BadRequest $e) {
+            // 404 is fine, just return empty.
+            if ($e->getCode() == 404) {
+                return [];
+            }
+
+            throw $e;
+        }
+
+        $properties = [];
+        foreach ($rawProperties as $key => $data) {
+            $properties[$key] = $data->value;
+        }
+
+        return $properties;
+    }
+
+    /*
+     * Jump through a bunch of hoops so that if the contact exists we
+     * don't flatten existing values.
+     */
+    public function mergeIfExists(array $contact): array
+    {
+        $existing = $this->getContactProperties(array_get($contact, 'email'));
+        if (!$existing) {
+            return $contact;
+        }
+
+        $fieldsToMerge = [
+            'lead_type',
+            'linked_agents',
+            'linked_office',
+            'lead_source',
+            'property_24_references',
+            'private_property_references',
+        ];
+
+        foreach ($fieldsToMerge as $e) {
+            if (array_get($contact, $e) || array_get($existing, $e)) {
+                $contact[$e] = self::mergeMultiString(array_get($contact, $e) ?: '', array_get($existing, $e) ?: '');
+            }
+        }
+
+        // Do this separately because the glue is , not ;
+        if (array_get($contact, 'enquiry_listing_references') || array_get($existing, 'enquiry_listing_references')) {
+            $contact['enquiry_listing_references'] = self::mergeMultiString(
+                array_get($contact, 'enquiry_listing_references', ''),
+                array_get($existing, 'enquiry_listing_references', ''),
+                ','
+            );
+        }
+
+        $contact['newsletter'] = (array_get($contact, 'newsletter') == 'Yes' || array_get($existing, 'newsletter') == 'Yes') ? 'Yes' : 'No';
+
+        return $contact;
+    }
+
+    public function getContactByID(int $vid): StdClass
+    {
+        $key = self::key([ 'getContactByID', $vid, ], [ $this->api->client->key, ]);
+
+        return Cache::remember($key, 10, function () use ($vid) {
+            $response = $this->api->contacts()->getById($vid);
+            return $response->data;
+        });
+    }
+
+    public function ensurePropertyOptionExists(string $name, string $value): string
+    {
+        if (!$this->contactPropertyHasOption($name, $value)) {
+            $this->addContactPropertyOption($name, $value);
+        }
+
+        return $value;
+    }
+
+    public function makeMultiString(string $name, Collection $options, bool $validate = true): string
+    {
+        if ($validate) {
+            $options->each(function ($e) use ($name) {
+                $this->ensurePropertyOptionExists($name, $e);
+            });
+        }
+
+        return $options->implode(';');
     }
 }

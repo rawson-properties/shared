@@ -22,27 +22,4 @@ class Sale extends Model
     {
         return $this->belongsTo(SellerList::class, 'SELLERLISTID', 'ID');
     }
-
-    /*
-     * Look at my status and return the corresponding Hubspot Deal Stage
-     */
-    public function getHubspotDealStage(): string
-    {
-        switch ($this->SALESTATUSID) {
-            case SaleStatus::SUSPENSIVE:
-                return config('hubspot.dealstage.deed_of_sale');
-                break;
-            case SaleStatus::FINAL:
-                return config('hubspot.dealstage.deed_of_sale');
-                break;
-            case SaleStatus::CLOSED:
-                return config('hubspot.dealstage.transfer');
-                break;
-            case SaleStatus::CANCELLED:
-                return config('hubspot.dealstage.cancelled');
-                break;
-            default:
-                throw new Exception('Unsupported Hubspot Deal Stage!');
-        }
-    }
 }

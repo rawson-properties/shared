@@ -23,5 +23,8 @@ class MergeMultiStringTest extends TestCase
 
         $result = Hubspot::mergeMultiString('first;second', 'first;second');
         $this->assertEquals($result, 'first;second');
+
+        $result = Hubspot::mergeMultiString('first', 'second', ',');
+        $this->assertEquals($result, 'first,second');
     }
 }
