@@ -101,6 +101,21 @@ class Hubspot
         ];
     }
 
+    public static function rt3BusinessTypeToPropertyZone(?string $businessType): string
+    {
+        switch ($businessType) {
+            case 'Rawson Auctions':
+                return 'Auction';
+            case 'Rawson Commercial':
+                return 'Commercial';
+            case 'Rawson Projects':
+                return 'New Development';
+            default:
+                return 'Residential';
+        }
+    }
+
+
     public function __construct(string $key = null)
     {
         $this->api = HubspotFactory::create($key ?: config('hubspot.key'));
