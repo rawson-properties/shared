@@ -35,4 +35,9 @@ class SellerList extends Model
     {
         return $this->belongsTo(Property::class, 'PROPERTYID', 'ID');
     }
+
+    public function businessType()
+    {
+        return $this->belongsTo(BusinessType::class, 'BUSINESSTYPEID', 'ID');
+    }
 }
