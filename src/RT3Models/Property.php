@@ -34,4 +34,9 @@ class Property extends Model
     {
         return $this->belongsTo(MunicipalAreaDefinition::class, 'PHYSICALADDRESSID', 'ID');
     }
+
+    public function sellerReferalSummary()
+    {
+        return $this->hasMany(SellerReferalSummary::class, 'propertyid', 'ID');
+    }
 }

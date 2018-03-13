@@ -56,4 +56,9 @@ class Person extends Model
     {
         return $this->belongsToMany(AdvertisingSource::class, 'personsource', 'PERSONID', 'ADVERTISINGSOURCEID');
     }
+
+    public function buyerReferalSummary()
+    {
+        return $this->hasMany(BuyerReferalSummary::class, 'personid', 'ID');
+    }
 }
