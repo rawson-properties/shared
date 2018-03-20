@@ -55,6 +55,16 @@ class Hubspot
         return trim($merge, $glue);
     }
 
+    public static function propertiesObjectToKV(StdClass $rawProperties): array
+    {
+        $properties = [];
+        foreach ($rawProperties as $key => $data) {
+            $properties[$key] = $data->value;
+        }
+
+        return $properties;
+    }
+
     /*
      * Try to parse the full message in BadRequest for useful detail
      */
@@ -185,7 +195,7 @@ class Hubspot
         return object_get($owners[0], 'ownerId');
     }
 
-    public function getContactProperties(string $email): array
+    public function getContactPropertiesByEmail(string $email): array
     {
         try {
             $response = $this->api->contacts()->getByEmail($email);
@@ -199,12 +209,14 @@ class Hubspot
             throw $e;
         }
 
-        $properties = [];
-        foreach ($rawProperties as $key => $data) {
-            $properties[$key] = $data->value;
-        }
+        return self::propertiesObjectToKV($rawProperties);
+    }
 
-        return $properties;
+    public function getContactPropertiesByID(string $id): array
+    {
+        $response = $this->api->contacts()->getById($id);
+        $rawProperties = object_get($response, 'data.properties');
+        return self::propertiesObjectToKV($rawProperties);
     }
 
     /*
@@ -213,7 +225,7 @@ class Hubspot
      */
     public function mergeIfExists(array $contact): array
     {
-        $existing = $this->getContactProperties(array_get($contact, 'email'));
+        $existing = $this->getContactPropertiesByEmail(array_get($contact, 'email'));
         if (!$existing) {
             return $contact;
         }
