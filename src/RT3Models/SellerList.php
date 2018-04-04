@@ -2,6 +2,8 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class SellerList extends Model
 {
     protected $table = 'sellerlist';
@@ -9,6 +11,22 @@ class SellerList extends Model
         'CREATED',
         'UPDATED',
     ];
+
+    public function scopeIsActive(Builder $query): Builder
+    {
+        return $query
+            ->where(function ($query) {
+                $query->whereNull('sellerlist.EXPIRYDATE')
+                    ->orWhereRaw('sellerlist.EXPIRYDATE > CURRENT_DATE()')
+                    ;
+            })
+            ->whereIn('sellerlist.SELLERLISTSTATUSID', [
+                SellerListStatus::LISTING,
+                SellerListStatus::SOLDBYRAWSON,
+                SellerListStatus::SOLDBYCOMPETITOR,
+            ])
+            ;
+    }
 
     // Relations
     public function people()
