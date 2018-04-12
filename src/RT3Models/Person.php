@@ -47,6 +47,11 @@ class Person extends Model
         return $this->belongsToMany(BuyerList::class, 'personbuyerlist', 'PERSONID', 'BUYERLISTID');
     }
 
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class, 'personsales', 'PERSONID', 'SALESID');
+    }
+
     public function sellerlist()
     {
         return $this->belongsToMany(SellerList::class, 'personsellerlist', 'PERSONID', 'SELLERLISTID');
