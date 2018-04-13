@@ -36,7 +36,7 @@ class Hubglue
         });
     }
 
-    private static function get(string $endpoint)
+    protected static function get(string $endpoint)
     {
         $guzzle = new GuzzleClient();
         $response = $guzzle->request(

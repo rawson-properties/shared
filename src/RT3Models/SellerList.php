@@ -12,6 +12,20 @@ class SellerList extends Model
         'UPDATED',
     ];
 
+    protected $firstImage;
+
+    public function getFirstImageAttribute()
+    {
+        if (!$this->firstImage) {
+            $sellerImage = $this->sellerListImageRefs->where('DISPLAY', 'y')->first();
+            if ($sellerImage) {
+                $this->firstImage = $sellerImage->propertyImageRef;
+            }
+        }
+
+        return $this->firstImage;
+    }
+
     public function scopeIsActive(Builder $query): Builder
     {
         return $query
@@ -39,9 +53,9 @@ class SellerList extends Model
         return $this->belongsToMany(Agent::class, 'agentsellerlist', 'SELLERLISTID', 'AGENTLISTID');
     }
 
-    public function p24()
+    public function businessType()
     {
-        return $this->hasOne(P24::class, 'ID', 'P24ID');
+        return $this->belongsTo(BusinessType::class, 'BUSINESSTYPEID', 'ID');
     }
 
     public function office()
@@ -49,13 +63,25 @@ class SellerList extends Model
         return $this->hasOne(Office::class, 'ID', 'OFFICEID');
     }
 
+    public function p24()
+    {
+        return $this->hasOne(P24::class, 'ID', 'P24ID');
+    }
+
     public function property()
     {
         return $this->belongsTo(Property::class, 'PROPERTYID', 'ID');
     }
 
-    public function businessType()
+    public function sellerListImageRefs()
     {
-        return $this->belongsTo(BusinessType::class, 'BUSINESSTYPEID', 'ID');
+        return $this->hasMany(SellerListImageRef::class, 'SELLERLISTID', 'ID')
+            ->orderBy('SORTORDER', 'ASC')
+            ;
+    }
+
+    public function sellerListStatus()
+    {
+        return $this->hasOne(SellerListStatus::class, 'ID', 'SELLERLISTSTATUSID');
     }
 }
