@@ -278,6 +278,13 @@ class Hubspot
         return $value;
     }
 
+    public function ensurePropertyOptionsExist(string $name, Collection $options): Collection
+    {
+        return $options->map(function ($e) use ($name) {
+            return $this->ensurePropertyOptionExists($name, $e);
+        });
+    }
+
     public function makeMultiString(string $name, Collection $options, bool $validate = true): string
     {
         if ($validate) {
