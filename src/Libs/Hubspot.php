@@ -231,6 +231,7 @@ class Hubspot
         }
 
         $fieldsToMerge = [
+            'areas',
             'lead_type',
             'linked_agents',
             'linked_office',
