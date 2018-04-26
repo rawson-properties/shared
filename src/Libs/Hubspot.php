@@ -225,6 +225,10 @@ class Hubspot
      */
     public function mergeIfExists(array $contact): array
     {
+        if (!array_get($contact, 'email')) {
+            return $contact;
+        }
+
         $existing = $this->getContactPropertiesByEmail(array_get($contact, 'email'));
         if (!$existing) {
             return $contact;
