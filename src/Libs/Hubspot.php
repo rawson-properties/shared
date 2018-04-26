@@ -230,6 +230,21 @@ class Hubspot
             return $contact;
         }
 
+        $fieldsToSkipIfSet = [
+            'beds',
+            'baths',
+            'price_from',
+            'price_max',
+            'size_from',
+            'size_to',
+        ];
+
+        foreach ($fieldsToSkipIfSet as $e) {
+            if (data_get($existing, $e)) {
+                unset($contact[$e]);
+            }
+        }
+
         $fieldsToMerge = [
             'areas',
             'lead_type',
