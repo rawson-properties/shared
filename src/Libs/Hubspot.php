@@ -154,9 +154,11 @@ class Hubspot
         $data = object_get($this->api->contactProperties()->get($name), 'data');
         $options = collect($data->options)->pluck('label');
 
+        /* Disabling this as it's fine to add from 0 existing options.
         if (!$options->count()) {
             throw new Exception('addContactPropertyOption returned no options! Aborting for safety.');
         }
+        */
 
         if ($options->contains($options)) {
             return;
