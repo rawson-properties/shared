@@ -51,7 +51,12 @@ class AuthController extends Controller
             throw $e;
         }
 
-        if (!in_array(str_after($u->getEmail(), '@'), [ 'rawson.co.za', 'rawsonproperties.com', ])) {
+        if (!in_array(str_after($u->getEmail(), '@'), [
+            'rawson.co.za',
+            'rawsoncommercial.com',
+            'rawsonproperties.com',
+            'rawsonrentals.com',
+        ])) {
             return abort(500, 'Invalid OAuth domain!');
         }
 
