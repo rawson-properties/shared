@@ -25,4 +25,5 @@ class JobTitle extends Model
     const SHOWHOUSESITTER = 33;
     const HODIRECTOR = 35;
     const COMMERCIALBROKER = 37;
+    const SALESRENTALPARTNER = 39;
 }
