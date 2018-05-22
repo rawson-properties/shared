@@ -283,11 +283,15 @@ class Hubspot
 
     public function getContactByID(int $vid): StdClass
     {
+        return $this->api->contacts()->getById($vid)->data;
+    }
+
+    public function getContactByIDCached(int $vid): StdClass
+    {
         $key = self::key([ 'getContactByID', $vid, ], [ $this->api->client->key, ]);
 
         return Cache::remember($key, 10, function () use ($vid) {
-            $response = $this->api->contacts()->getById($vid);
-            return $response->data;
+            return $this->getContactByID($vid);
         });
     }
 
