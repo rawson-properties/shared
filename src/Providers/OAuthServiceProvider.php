@@ -1,6 +1,6 @@
 <?php
 
-namespace Rawson\Shared;
+namespace Rawson\Shared\Providers;
 
 use App;
 use Illuminate\Support\Facades\Route;
@@ -12,14 +12,14 @@ class OAuthServiceServiceProvider extends ServiceProvider
     {
         App::register(\Laravel\Socialite\SocialiteServiceProvider::class);
 
-        view()->addLocation(__DIR__ . '/resources/views');
+        view()->addLocation(__DIR__ . '/../resources/views');
     }
 
     public function map()
     {
         Route::middleware('web')
             ->namespace('Rawson\Shared\Http\Controllers')
-            ->group(__DIR__ . '/routes/oauth.php')
+            ->group(__DIR__ . '/../routes/oauth.php')
             ;
     }
 }

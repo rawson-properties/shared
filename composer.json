@@ -26,7 +26,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Rawson\\Shared\\RawsonSharedServiceProvider"
+                "Rawson\\Shared\\Providers\\RawsonSharedServiceProvider",
+                "Rawson\\Shared\\Providers\\PingServiceProvider"
             ]
         }
     }
