@@ -2,8 +2,13 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Cache;
+use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
+
 class Person extends Model
 {
+    use GeneratesCacheKeys;
+
     protected $table = 'person';
     protected $dates = [
         'CREATED',
@@ -15,12 +20,15 @@ class Person extends Model
     public function getDefaultAgentAttribute(): ?Agent
     {
         if ($this->defaultAgent === false) {
-            $this->defaultAgent = $this->employee->agents()
-                ->where('agentlist.ACTIVE', 'y')
-                ->orderBy('agentlist.DEFAULTOFFICE', 'DESC')
-                ->orderBy('agentlist.UPDATED', 'DESC')
-                ->first()
-                ;
+            $key = self::key([ 'getDefaultAgentAttribute', $this->ID, ]);
+            $this->defaultAgent = Cache::remember($key, 5, function () {
+                return $this->employee->agents()
+                    ->where('agentlist.ACTIVE', 'y')
+                    ->orderBy('agentlist.DEFAULTOFFICE', 'DESC')
+                    ->orderBy('agentlist.UPDATED', 'DESC')
+                    ->first()
+                    ;
+            });
         }
 
         return $this->defaultAgent;
