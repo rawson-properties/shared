@@ -151,6 +151,7 @@ class Hubspot
 
     public function addContactPropertyOption(string $name, string $option)
     {
+        $option = trim($option);
         $data = object_get($this->api->contactProperties()->get($name), 'data');
         $options = collect($data->options)->pluck('label');
 
@@ -160,7 +161,7 @@ class Hubspot
         }
         */
 
-        if ($options->contains($options)) {
+        if ($options->contains($option)) {
             return;
         } else {
             Log::debug(sprintf('%s adding option [%s] to property [%s]', self::class, $option, $name));
