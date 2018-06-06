@@ -47,7 +47,8 @@ class Hubglue
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer ' . self::getToken(),
                     'Content-Type' => 'application/json',
-                ]
+                ],
+                'timeout' => 5,
             ]
         );
 
@@ -66,7 +67,7 @@ class Hubglue
                     'Accept' => 'application/json',
                     'Authorization' => 'Bearer ' . self::getToken(),
                     'Content-Type' => 'application/json',
-                ]
+                ],
             ]
         );
 
