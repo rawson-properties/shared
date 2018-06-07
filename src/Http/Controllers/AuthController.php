@@ -64,4 +64,34 @@ class AuthController extends Controller
 
         return redirect()->intended(route('welcome'));
     }
+
+    public function connection(Request $request)
+    {
+        $person = $request->user()->rt3Person;
+        $activeAgents = collect();
+        if ($person) {
+            $activeAgents = $person
+                ->employee
+                ->agents()
+                ->isActive()
+                ->with([ 'office', ])
+                ->get()
+                ;
+        }
+
+        return view('auth.connection', [
+            'activeAgents' => $activeAgents,
+        ]);
+    }
+
+    public function connectionPost(Request $request)
+    {
+        $this->validate($request, [
+            'rt3_agent_id' => 'required',
+        ]);
+
+        session([ 'user.default_rt3_agent_id' => $request->input('rt3_agent_id'), ]);
+
+        return redirect()->route('auth.connection');
+    }
 }
