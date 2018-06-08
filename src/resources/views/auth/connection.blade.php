@@ -8,12 +8,12 @@
 
             @if (Auth::user()->rt3Person)
                 <p class="lead">
-                    This account <small>({{ Auth::user()->email }})</small> has a default office of "<em>{{ Auth::user()->default_office->NAME }}</em>".
+                    This account <small>({{ Auth::user()->email }})</small> has an active office of "<em>{{ Auth::user()->default_office->NAME }}</em>".
                 </p>
 
                 @if ($activeAgents && ($activeAgents->count() > 1))
                     <div class="card">
-                        <div class="card-header">Change default Office</div>
+                        <div class="card-header">Change active Office</div>
                         <ul class="list-group list-group-flush">
                             @foreach ($activeAgents as $agent)
                                 <li class="list-group-item">
