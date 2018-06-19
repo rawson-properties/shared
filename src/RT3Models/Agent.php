@@ -41,4 +41,14 @@ class Agent extends Model
     {
         return $this->belongsTo(Office::class, 'OFFICEID', 'ID');
     }
+
+    public function scopeForFullName($query, string $fullName)
+    {
+        return $query->leftJoin('employee', 'employee.ID', 'agentlist.EMPLOYEEID')
+            ->leftJoin('person', 'person.ID', 'employee.PERSONID')
+            ->where('agentlist.ACTIVE', 'y')
+            ->where('employee.EMPLOYEESTATUSID', EmployeeStatus::ACTIVE)
+            ->where('person.FULLNAME', $fullName)
+            ;
+    }
 }
