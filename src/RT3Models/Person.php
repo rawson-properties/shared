@@ -40,6 +40,11 @@ class Person extends Model
         return $this->belongsTo(Title::class, 'TITLEID', 'ID');
     }
 
+    public function jobTitle()
+    {
+        return $this->belongsTo(JobTitle::class, 'JOBTITLEID', 'ID');
+    }
+
     public function employee()
     {
         return $this->hasOne(Employee::class, 'PERSONID');
