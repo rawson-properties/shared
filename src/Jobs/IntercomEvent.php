@@ -27,11 +27,17 @@ class IntercomEvent implements ShouldQueue
     public function handle()
     {
         $client = new IntercomClient(config('intercom.access_token'), null);
-        $client->events->create([
+
+        $payload = [
             'created_at' => time(),
             'event_name' => $this->eventName,
             'email' => $this->email,
-            'metadata' => $this->meta,
-        ]);
+        ];
+
+        if ($this->meta) {
+            $payload['metadata'] = $this->meta;
+        }
+
+        $client->events->create($payload);
     }
 }
