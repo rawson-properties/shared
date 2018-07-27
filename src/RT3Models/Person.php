@@ -22,6 +22,10 @@ class Person extends Model
         if ($this->defaultAgent === false) {
             $key = self::key([ 'getDefaultAgentAttribute', $this->ID, ]);
             $this->defaultAgent = Cache::remember($key, 5, function () {
+                if (!$this->employee) {
+                    return;
+                }
+
                 return $this->employee->agents()
                     ->where('agentlist.ACTIVE', 'y')
                     ->orderBy('agentlist.DEFAULTOFFICE', 'DESC')
