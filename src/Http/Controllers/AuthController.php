@@ -4,10 +4,12 @@ namespace Rawson\Shared\Http\Controllers;
 
 use Auth;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Socialite;
+use Google_Service_Gmail;
 
 class AuthController extends Controller
 {
@@ -20,6 +22,16 @@ class AuthController extends Controller
         ]);
 
         $user->name = $u->getName();
+        $user->fill([
+            'access_token' => data_get($u, 'token'),
+            'token_created_at' => Carbon::now(),
+            'token_expires_in' => data_get($u, 'expiresIn', 0),
+        ]);
+        if (data_get($u, 'refreshToken')) {
+            $user->fill([
+                'refresh_token' => data_get($u, 'refreshToken'),
+            ]);
+        }
         $user->save();
 
         Auth::login($user);
@@ -34,7 +46,8 @@ class AuthController extends Controller
     public function connect()
     {
         return Socialite::driver('google')
-            ->with([ 'hd' => 'rawson.co.za', ])
+            ->with([ 'hd' => 'rawson.co.za', 'access_type' => 'offline', ])
+            ->scopes([Google_Service_Gmail::MAIL_GOOGLE_COM])
             ->redirect()
             ;
     }
