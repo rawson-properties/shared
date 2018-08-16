@@ -4,6 +4,7 @@ namespace Rawson\Shared\Http\Controllers;
 
 use Auth;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -19,7 +20,14 @@ class AuthController extends Controller
             'email' => $u->getEmail(),
         ]);
 
-        $user->name = $u->getName();
+        $user->fill([
+            'name' => $u->getName(),
+            'access_token' => data_get($u, 'token'),
+            'token_created_at' => Carbon::now(),
+            'token_expires_in' => data_get($u, 'expiresIn', 0),
+            'refresh_token' => data_get($u, 'refreshToken', $user->refresh_token),
+        ]);
+
         $user->save();
 
         Auth::login($user);
@@ -34,7 +42,11 @@ class AuthController extends Controller
     public function connect()
     {
         return Socialite::driver('google')
-            ->with([ 'hd' => 'rawson.co.za', ])
+            ->with([
+                'hd' => 'rawson.co.za',
+                'access_type' => 'offline',
+            ])
+            ->scopes(config('services.google.scopes', []))
             ->redirect()
             ;
     }
