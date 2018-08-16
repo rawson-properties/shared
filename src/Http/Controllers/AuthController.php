@@ -21,13 +21,14 @@ class AuthController extends Controller
             'email' => $u->getEmail(),
         ]);
 
-        $user->name = $u->getName();
         $user->fill([
+            'name' => $u->getName(),
             'access_token' => data_get($u, 'token'),
             'token_created_at' => Carbon::now(),
             'token_expires_in' => data_get($u, 'expiresIn', 0),
             'refresh_token' => data_get($u, 'refreshToken', $user->refresh_token),
         ]);
+
         $user->save();
 
         Auth::login($user);
@@ -46,7 +47,9 @@ class AuthController extends Controller
                 'hd' => 'rawson.co.za',
                 'access_type' => 'offline',
             ])
-            ->scopes([Google_Service_Gmail::MAIL_GOOGLE_COM])
+            ->scopes([
+                Google_Service_Gmail::MAIL_GOOGLE_COM,
+            ])
             ->redirect()
             ;
     }
