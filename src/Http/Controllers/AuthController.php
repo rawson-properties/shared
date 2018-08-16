@@ -5,7 +5,6 @@ namespace Rawson\Shared\Http\Controllers;
 use Auth;
 use App\Models\User;
 use Carbon\Carbon;
-use Google_Service_Gmail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -47,9 +46,7 @@ class AuthController extends Controller
                 'hd' => 'rawson.co.za',
                 'access_type' => 'offline',
             ])
-            ->scopes([
-                Google_Service_Gmail::MAIL_GOOGLE_COM,
-            ])
+            ->scopes(config('services.google.scopes', []))
             ->redirect()
             ;
     }
