@@ -98,7 +98,9 @@ class Hubspot
 
     public static function formatDate(string $date): string
     {
-        return Carbon::parse($date, 'UTC')->startOfDay()->timestamp * 1000;
+        $date = Carbon::parse($date, 'UTC');
+        $date = Carbon::create($date->year, $date->month, $date->day, 0, 0, 0, 'UTC');
+        return $date->timestamp * 1000;
     }
 
     public static function splitName(string $name): array
