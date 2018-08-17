@@ -33,24 +33,23 @@ if (!function_exists('sa_id_to_date')) {
      * @param string $input
      * @return mixed null|Carbon
      */
-    function sa_id_to_date($input)
+    function sa_id_to_date($input): ?Carbon
     {
-        $chars = str_split($input);
+        /*
+         * This regex matches the first 6 digits of the id_number with yymmdd format,
+         * and stores yy, mm, dd in $dateParts, bypassing all non-standard date formats
+         * that would error when converting to Carbon date
+         */
+        $pattern = '/^([0-9][0-9])(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])/';
+        if (strlen($input) == 13 && preg_match($pattern, $input, $dateParts)) {
+            list($_, $year, $month, $day) = array_map('intval', $dateParts);
+            $currentYear = Carbon::today('UTC')->year % 100;
+            $year += $year < $currentYear ? 2000 : 1900;
 
-        if (count($chars) !== 13) {
-            return;
+            return Carbon::create($year, $month, $day, 0, 0, 0, 'UTC');
+        } else {
+            return null;
         }
-
-        $year = (int) $chars[0] . $chars[1];
-        $month = (int) $chars[2] . $chars[3];
-        $day = (int) $chars[4] . $chars[5];
-
-        $date = new Carbon;
-        $date->year = $year < 20 ? 2000 + $year : 1900 + $year;
-        $date->month = $month;
-        $date->day = $day;
-
-        return $date;
     }
 }
 
