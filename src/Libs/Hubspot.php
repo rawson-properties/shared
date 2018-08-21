@@ -2,6 +2,9 @@
 
 namespace Rawson\Shared\Libs;
 
+use Rawson\Shared\Libs\Exceptions\Hubspot\InvalidEmail;
+use Rawson\Shared\Libs\Exceptions\Hubspot\InvalidOption;
+use Rawson\Shared\Libs\Exceptions\Hubspot\PropertyDoesntExist;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Cache;
 use Carbon\Carbon;
@@ -76,24 +79,26 @@ class Hubspot
 
         // If we fail decoding throw the original ex
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw $e;
+            return $e;
         }
 
         // If there's no validationResults, throw original e
         try {
             $validationError = $json->validationResults[0];
         } catch (Exception $ex) {
-            throw $e;
+            return $e;
         }
 
-        $error = sprintf(
-            '%s for %s: %s',
-            $validationError->error,
-            $validationError->name,
-            substr($validationError->message, 0, strpos($validationError->message, ' was not one of'))
-        );
-
-        throw new BadRequest($error, $e->getCode(), $e);
+        switch ($validationError->error) {
+            case 'INVALID_EMAIL':
+                return new InvalidEmail($validationError->message, $e->getCode(), $e);
+            case 'INVALID_OPTION':
+                return new InvalidOption($validationError, $e->getCode(), $e);
+            case 'PROPERTY_DOESNT_EXIST':
+                return new PropertyDoesntExist($validationError->message, $e->getCode(), $e);
+            default:
+                return $e;
+        }
     }
 
     public static function formatDate(string $date): string
