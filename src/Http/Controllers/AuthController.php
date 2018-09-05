@@ -65,6 +65,7 @@ class AuthController extends Controller
 
         if (!in_array(str_after($u->getEmail(), '@'), [
             'rawson.co.za',
+            'rawson-developers.co.za',
             'rawsoncommercial.com',
             'rawsonproperties.com',
             'rawsonrentals.com',
