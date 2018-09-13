@@ -7,10 +7,15 @@
             <hr>
 
             @if (Auth::user()->rt3Person)
-                <p class="lead">
-                    This account <small>({{ Auth::user()->email }})</small> has an active office of "<em>{{ Auth::user()->default_office->NAME }}</em>".
-                </p>
-
+                @if (Auth::user()->default_office)
+                    <p class="lead">
+                        This account <small>({{ Auth::user()->email }})</small> has an active office of "<em>{{ Auth::user()->default_office->NAME }}</em>".
+                    </p>
+                @else
+                    <p class="lead">
+                        This account <small>({{ Auth::user()->email }})</small> has no active office. Please contact Rawson IT to set up a default office setting.</em>".
+                    </p>
+                @endif
                 @if ($activeAgents && ($activeAgents->count() > 1))
                     <div class="card">
                         <div class="card-header">Change active Office</div>
