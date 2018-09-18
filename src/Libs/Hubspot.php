@@ -229,6 +229,13 @@ class Hubspot
         return self::propertiesObjectToKV($rawProperties);
     }
 
+    public function getEmailSubscriptionStatus(string $email, string $portalID = null): StdClass
+    {
+        $portalID = $portalID ?: config('hubspot.portal_id');
+        $response = $this->api->email()->subscriptionStatus($portalID, $email);
+        return data_get($response, 'data');
+    }
+
     /*
      * Jump through a bunch of hoops so that if the contact exists we
      * don't flatten existing values.
