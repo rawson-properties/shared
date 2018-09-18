@@ -17,7 +17,7 @@
                             This account <small>({{ Auth::user()->email }})</small> has no linked RT3 Agent records with active offices.
                         </p>
                         <p>
-                            Contact Rawson IT to set up a default office for your account.
+                            Contact Rawson IT (<a href="mailto:ticket@rawsonproperties.com">ticket@rawsonproperties.com</a>) to set up a default office for your account.
                         </p>
                     </div>
                 @endif
