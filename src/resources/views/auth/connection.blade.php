@@ -7,10 +7,20 @@
             <hr>
 
             @if (Auth::user()->rt3Person)
-                <p class="lead">
-                    This account <small>({{ Auth::user()->email }})</small> has an active office of "<em>{{ Auth::user()->default_office->NAME }}</em>".
-                </p>
-
+                @if (Auth::user()->default_office)
+                    <p class="lead">
+                        This account <small>({{ Auth::user()->email }})</small> has an active office of "<em>{{ Auth::user()->default_office->NAME }}</em>".
+                    </p>
+                @else
+                    <div class="alert alert-danger">
+                        <p>
+                            This account <small>({{ Auth::user()->email }})</small> has no linked RT3 Agent records with active offices.
+                        </p>
+                        <p>
+                            Contact Rawson IT (<a href="mailto:ticket@rawsonproperties.com">ticket@rawsonproperties.com</a>) to set up a default office for your account.
+                        </p>
+                    </div>
+                @endif
                 @if ($activeAgents && ($activeAgents->count() > 1))
                     <div class="card">
                         <div class="card-header">Change active Office</div>
