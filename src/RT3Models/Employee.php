@@ -18,4 +18,14 @@ class Employee extends Model
     {
         return $this->hasMany(Agent::class, 'EMPLOYEEID', 'ID');
     }
+
+    public function repSalesDetails()
+    {
+        return $this->hasMany(RepSalesDetail::class, 'employeeid', 'ID');
+    }
+
+    public function repAchieverDetails2016()
+    {
+        return $this->hasMany(RepAchieverDetail2016::class, 'employeeid', 'ID');
+    }
 }
