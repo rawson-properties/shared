@@ -36,7 +36,7 @@ class Hubglue
         });
     }
 
-    protected static function get(string $endpoint)
+    protected static function get(string $endpoint, int $timeout = 5)
     {
         $guzzle = new GuzzleClient();
         $response = $guzzle->request(
@@ -48,7 +48,7 @@ class Hubglue
                     'Authorization' => 'Bearer ' . self::getToken(),
                     'Content-Type' => 'application/json',
                 ],
-                'timeout' => 5,
+                'timeout' => $timeout,
             ]
         );
 
