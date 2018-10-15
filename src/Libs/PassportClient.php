@@ -42,7 +42,7 @@ class PassportClient
         });
     }
 
-    public function get(string $endpoint)
+    public function get(string $endpoint, int $timeout = 5)
     {
         $guzzle = new GuzzleClient();
         $response = $guzzle->request(
@@ -54,7 +54,7 @@ class PassportClient
                     'Authorization' => 'Bearer ' . $this->getToken(),
                     'Content-Type' => 'application/json',
                 ],
-                'timeout' => 5,
+                'timeout' => $timeout,
             ]
         );
 
