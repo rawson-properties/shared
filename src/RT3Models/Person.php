@@ -74,6 +74,16 @@ class Person extends Model
         return $this->belongsToMany(SellerList::class, 'personsellerlist', 'PERSONID', 'SELLERLISTID');
     }
 
+    public function sellerReferralSummaries()
+    {
+        return $this->belongsToMany(
+            SellerReferalSummary::class,
+            'personsellerlistreferral',
+            'PERSONID',
+            'SELLERLISTREFERRALID'
+        );
+    }
+
     public function advertisingsource()
     {
         return $this->belongsToMany(AdvertisingSource::class, 'personsource', 'PERSONID', 'ADVERTISINGSOURCEID');
