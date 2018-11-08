@@ -2,6 +2,9 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use DB;
+use Illuminate\Support\Collection;
+
 class Office extends Model
 {
     protected $table = 'office';
@@ -9,6 +12,53 @@ class Office extends Model
         'CREATED',
         'UPDATED',
     ];
+
+    public static function findNearestToLatLng(
+        float $lat,
+        float $lng,
+        int $businessType = BusinessType::RAWSONPROPERTIES
+    ): self {
+        return self::findNearToLatLng($lat, $lng, $businessType, 1)->first();
+    }
+
+    public static function findNearToLatLng(
+        float $lat,
+        float $lng,
+        int $businessType = BusinessType::RAWSONPROPERTIES,
+        int $limit = 5
+    ): Collection {
+        $distanceQuery = sprintf('(
+            6371 * acos (
+                cos (radians(%s))
+                * cos(radians(GEOLATITUDE))
+                * cos(radians(GEOLONGITUDE) - radians(%s))
+                + sin (radians(%s))
+                * sin(radians(GEOLATITUDE))
+            )
+        ) AS distance', $lat, $lng, $lat);
+
+        $query = self::select([ '*', DB::raw($distanceQuery), ])
+            ->whereNotNull('GEOLATITUDE')
+            ->whereNotNull('GEOLONGITUDE')
+            ->orderBy('distance')
+            ->limit($limit)
+            ;
+
+        switch ($businessType) {
+            case BusinessType::RAWSONRENTALS:
+                $query->where('name', 'LIKE', '% Rentals');
+                break;
+            case BusinessType::RAWSONCOMMERCIAL:
+                $query->where('name', 'LIKE', '% Commercial');
+                break;
+            default:
+                // Unless we're looking for Rentals or Commercial exclude them
+                $query->where('name', 'NOT LIKE', '% Rentals');
+                $query->where('name', 'NOT LIKE', '% Commercial');
+        }
+
+        return $query->get();
+    }
 
     public function address()
     {
