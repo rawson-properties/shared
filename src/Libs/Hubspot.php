@@ -68,6 +68,32 @@ class Hubspot
         return $properties;
     }
 
+    public static function rejectProperties(array $properties): array
+    {
+        $properties = collect($properties)->filter(function ($value, $key) {
+            return !starts_with($key, 'hs_');
+        });
+
+        $rejectProperties = [
+            'associatedcompanyid',
+            'associatedcompanylastupdated',
+            'createdate',
+            'hubspot_owner_id',
+            'hubspot_owner_assigneddate',
+            'lastmodifieddate',
+            'lifecyclestage',
+            'notes_last_contacted',
+            'num_unique_conversion_events',
+            'num_conversion_events',
+        ];
+
+        $properties = $properties->reject(function ($e) use ($rejectProperties) {
+            return in_array($e, $rejectProperties);
+        });
+
+        return $properties->toArray();
+    }
+
     /*
      * Try to parse the full message in BadRequest for useful detail
      */
@@ -131,7 +157,6 @@ class Hubspot
                 return 'Residential';
         }
     }
-
 
     public function __construct(string $key = null)
     {
