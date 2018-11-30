@@ -316,8 +316,6 @@ class Hubspot
             );
         }
 
-        $contact['newsletter'] = (array_get($contact, 'newsletter') == 'Yes' || array_get($existing, 'newsletter') == 'Yes') ? 'Yes' : 'No';
-
         return $contact;
     }
 
