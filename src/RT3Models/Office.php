@@ -65,6 +65,16 @@ class Office extends Model
         return $this->belongsTo(PhysicalAddress::class, 'PHYSICALADDRESSID', 'ID');
     }
 
+    public function agents()
+    {
+        return $this->hasMany(Agent::class, 'OFFICEID', 'ID');
+    }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class, 'OFFICEID', 'ID');
+    }
+
     public function sellerLists()
     {
         return $this->hasMany(SellerList::class, 'OFFICEID', 'ID');
