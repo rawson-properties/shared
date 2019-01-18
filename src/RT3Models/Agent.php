@@ -12,14 +12,41 @@ class Agent extends Model
         'UPDATED',
     ];
 
+    // @TODO: See which projects use this method and refactor in favour of attribute
     public function getName(): string
+    {
+        return $this->name;
+    }
+
+    // @TODO: See which projects use this method and refactor in favour of attribute
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getNameAttribute(): string
     {
         return $this->employee->person->FULLNAME;
     }
 
-    public function getEmail(): string
+    public function getEmailAttribute(): string
     {
         return $this->employee->person->EMAIL;
+    }
+
+    public function getPhotoUrlSmallAttribute(): ?string
+    {
+        return $this->employee->person->PHOTOURLSMALL;
+    }
+
+    public function getPhotoUrlImageLargeAttribute(): ?string
+    {
+        return $this->employee->person->PHOTOURLLARGE;
+    }
+
+    public function getCellphoneAttribute(): ?string
+    {
+        return $this->employee->person->CELLPHONESANITIZED;
     }
 
     public function scopeIsActive(Builder $query): Builder
@@ -30,6 +57,11 @@ class Agent extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'EMPLOYEEID', 'ID');
+    }
+
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class, 'agentsalelist', 'AGENTLISTID', 'SALEID');
     }
 
     public function sellerLists()
