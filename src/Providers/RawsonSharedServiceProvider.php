@@ -10,7 +10,9 @@ class RawsonSharedServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/hubspot.php', 'hubspot');
-        $this->mergeConfigFrom(__DIR__ . '/../config/intercom.php', 'intercom');
+        $this->mergeConfigFrom(__DIR__ . '/../config/crisp.php', 'crisp');
+
+        view()->addLocation(__DIR__ . '/../resources/views');
 
         $this->commands([
             \Rawson\Shared\Commands\HubgluePing::class,

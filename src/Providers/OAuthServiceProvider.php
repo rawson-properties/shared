@@ -11,8 +11,6 @@ class OAuthServiceServiceProvider extends ServiceProvider
     public function register()
     {
         App::register(\Laravel\Socialite\SocialiteServiceProvider::class);
-
-        view()->addLocation(__DIR__ . '/../resources/views');
     }
 
     public function map()
