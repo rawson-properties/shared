@@ -49,6 +49,15 @@ class Agent extends Model
         return $this->employee->person->CELLPHONESANITIZED;
     }
 
+    public function getJobTitleAttribute(): ?string
+    {
+        if ($this->employee->person->JOBTITLEID === 1) {
+            return null;
+        }
+
+        return $this->employee->person->jobTitle->ITEM;
+    }
+
     public function scopeIsActive(Builder $query): Builder
     {
         return $query->where('ACTIVE', 'y');

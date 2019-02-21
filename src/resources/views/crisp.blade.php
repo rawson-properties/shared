@@ -5,17 +5,28 @@
         @auth
             $crisp.push([ 'set', 'user:email', '{{ Auth::user()->email }}', ]);
 
-            @if (Auth::user()->default_agent)
-                @if (Auth::user()->default_agent->name)
-                    $crisp.push([ 'set', 'user:nickname', '{{ Auth::user()->default_agent->name }}', ]);
+            @if (Auth::user()->has_crisp_data)
+                @if (Auth::user()->crisp_nickname)
+                    $crisp.push([ 'set', 'user:nickname', '{{ Auth::user()->crisp_nickname }}', ]);
                 @endif
 
-                @if (Auth::user()->default_agent->cellphone)
-                    $crisp.push([ 'set', 'user:phone', '{{ Auth::user()->default_agent->cellphone }}', ]);
+                @if (Auth::user()->crisp_phone)
+                    $crisp.push([ 'set', 'user:phone', '{{ Auth::user()->crisp_phone }}', ]);
                 @endif
 
-                @if (Auth::user()->default_agent->photo_url_small)
-                    $crisp.push([ 'set', 'user:avatar', '{{ Auth::user()->default_agent->photo_url_small }}', ]);
+                @if (Auth::user()->crisp_avatar)
+                    $crisp.push([ 'set', 'user:avatar', '{{ Auth::user()->crisp_avatar }}', ]);
+                @endif
+
+                @if (Auth::user()->has_crisp_office_data)
+                    $crisp.push([
+                        'set', 'user:company', [ '{{ Auth::user()->crisp_company }}', {
+                            employment: [
+                                '{{ Auth::user()->crisp_job_title }}',
+                                '{{ Auth::user()->crisp_job_role }}'
+                            ],
+                        }]
+                    ]);
                 @endif
             @endif
         @endauth
