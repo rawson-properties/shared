@@ -3,11 +3,10 @@
 namespace Rawson\Shared\Libs;
 
 use Illuminate\Support\Collection;
-use StdClass;
 
 class LightProxy
 {
-    private static function factory(): PassportClient
+    protected static function factory(): PassportClient
     {
         return new PassportClient(
             config('services.lightproxy.url'),
@@ -48,45 +47,47 @@ class LightProxy
         ]);
     }
 
-    public static function propertyFind(int $id): Collection
+    public static function propertyFind(int $id, int $timeout = 5): Collection
     {
-        return collect(self::factory()->get('/property/' . $id));
+        return collect(self::factory()->get('/property/' . $id, $timeout));
     }
 
-    public static function propertyReport(int $id): StdClass
+    public static function propertyReport(int $id, int $timeout = 5): object
     {
-        return self::factory()->get(sprintf('/property/%s/report', $id));
+        $url = sprintf('/property/%s/report', $id);
+        return self::factory()->get($url, $timeout);
     }
 
-    public static function propertyWhere(array $params): Collection
+    public static function propertyWhere(array $params, int $timeout = 5): Collection
     {
         $url = '/property/where?' . http_build_query($params);
-        return collect(self::factory()->get($url));
+        return collect(self::factory()->get($url, $timeout));
     }
 
-    public static function suburbReport(int $id): StdClass
+    public static function suburbReport(int $id, int $timeout = 5): object
     {
-        return self::factory()->get(sprintf('/suburb/%s/report', $id));
+        $url = sprintf('/suburb/%s/report', $id);
+        return self::factory()->get($url, $timeout);
     }
 
-    public static function estates(string $query): Collection
+    public static function estates(string $query, int $timeout = 5): Collection
     {
-        return collect(self::factory()->get('/estates?q=' . $query));
+        return collect(self::factory()->get('/estates?q=' . $query, $timeout));
     }
 
-    public static function sectionals(string $query): Collection
+    public static function sectionals(string $query, int $timeout = 5): Collection
     {
-        return collect(self::factory()->get('/sectionals?q=' . $query));
+        return collect(self::factory()->get('/sectionals?q=' . $query, $timeout));
     }
 
-    public static function suburbs(string $query): Collection
+    public static function suburbs(string $query, int $timeout = 5): Collection
     {
-        return collect(self::factory()->get('/suburbs?q=' . $query));
+        return collect(self::factory()->get('/suburbs?q=' . $query, $timeout));
     }
 
-    public static function streets(string $query, int $subID = null): Collection
+    public static function streets(string $query, int $subID = null, int $timeout = 5): Collection
     {
         $url = sprintf('/streets?q=%s&id=%s', $query, $subID);
-        return collect(self::factory()->get($url));
+        return collect(self::factory()->get($url, $timeout));
     }
 }
