@@ -68,19 +68,19 @@ if (!function_exists('extract_xml_tags')) {
         $items = [];
         $open = false;
         foreach ($values as $index => $value) {
-            if (strtolower(array_get($value, 'tag')) === $tag && array_get($value, 'type') === 'open') {
+            if (strtolower(data_get($value, 'tag')) === $tag && data_get($value, 'type') === 'open') {
                 $open = true;
                 $item = [];
             }
 
-            if (strtolower(array_get($value, 'tag')) === $tag && array_get($value, 'type') === 'close') {
+            if (strtolower(data_get($value, 'tag')) === $tag && data_get($value, 'type') === 'close') {
                 $open = false;
                 $items[] = $item;
             }
 
-            if ($open === true && array_get($value, 'type') === 'complete') {
-                $k = strtolower(array_get($value, 'tag'));
-                $v = trim(array_get($value, 'value'));
+            if ($open === true && data_get($value, 'type') === 'complete') {
+                $k = strtolower(data_get($value, 'tag'));
+                $v = trim(data_get($value, 'value'));
                 $item[$k] = $v;
             }
         }

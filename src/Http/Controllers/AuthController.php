@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Socialite;
 
@@ -63,7 +64,7 @@ class AuthController extends Controller
             throw $e;
         }
 
-        if (!in_array(str_after($u->getEmail(), '@'), [
+        if (!in_array(Str::after($u->getEmail(), '@'), [
             'rawson.co.za',
             'rawson-developers.co.za',
             'rawsoncommercial.com',

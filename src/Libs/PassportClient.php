@@ -27,7 +27,7 @@ class PassportClient
     {
         $key = self::key([ 'getToken', ], [ $this->baseURL, $this->clientID, $this->clientSecret, ]);
 
-        return Cache::remember($key, 24 * 60, function () {
+        return Cache::remember($key, 24 * 60 * 60, function () {
             $guzzle = new GuzzleClient();
             $response = $guzzle->post($this->baseURL . '/oauth/token', [
                 'form_params' => [

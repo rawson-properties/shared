@@ -21,7 +21,7 @@ class Person extends Model
     {
         if ($this->defaultAgent === false) {
             $key = self::key([ 'getDefaultAgentAttribute', $this->ID, ]);
-            $this->defaultAgent = Cache::remember($key, 5, function () {
+            $this->defaultAgent = Cache::remember($key, 5 * 60, function () {
                 if (!$this->employee) {
                     return;
                 }

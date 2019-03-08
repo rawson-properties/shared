@@ -21,7 +21,7 @@ class Hubglue
             config('services.hubglue.client_secret'),
         ]);
 
-        return Cache::remember($key, 24 * 60, function () {
+        return Cache::remember($key, 24 * 60 * 60, function () {
             $guzzle = new GuzzleClient();
             $response = $guzzle->post(config('services.hubglue.url') . '/oauth/token', [
                 'form_params' => [

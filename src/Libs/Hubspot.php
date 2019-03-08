@@ -13,7 +13,6 @@ use Log;
 use Illuminate\Support\Collection;
 use SevenShores\Hubspot\Exceptions\BadRequest;
 use SevenShores\Hubspot\Factory as HubspotFactory;
-use StdClass;
 
 class Hubspot
 {
@@ -31,7 +30,7 @@ class Hubspot
         });
     }
 
-    public static function makeProperty(string $name, $value): StdClass
+    public static function makeProperty(string $name, $value): object
     {
         return (object) [
             'property' => $name,
@@ -58,7 +57,7 @@ class Hubspot
         return trim($merge, $glue);
     }
 
-    public static function propertiesObjectToKV(StdClass $rawProperties): array
+    public static function propertiesObjectToKV(object $rawProperties): array
     {
         $properties = [];
         foreach ($rawProperties as $key => $data) {
@@ -175,7 +174,7 @@ class Hubspot
 
     public function getContactPropertyOptions(string $name): Collection
     {
-        return Cache::remember($this->keyGetContactPropertyOptions($name), 60, function () use ($name) {
+        return Cache::remember($this->keyGetContactPropertyOptions($name), 60 * 60, function () use ($name) {
             $response = $this->api->contactProperties()->get($name);
             return collect($response->options)->pluck('value');
         });
@@ -214,7 +213,7 @@ class Hubspot
     public function getOwnerIDFromEmail(string $email): ?int
     {
         $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $this->api->client->key, ]);
-        $owners = Cache::remember($key, 15, function () use ($email) {
+        $owners = Cache::remember($key, 15 * 60, function () use ($email) {
             $response = $this->api->owners()->all([
                 'email' => $email,
                 'includeInactive' => false,
@@ -254,7 +253,7 @@ class Hubspot
         return self::propertiesObjectToKV($rawProperties);
     }
 
-    public function getEmailSubscriptionStatus(string $email, string $portalID = null): StdClass
+    public function getEmailSubscriptionStatus(string $email, string $portalID = null): object
     {
         $portalID = $portalID ?: config('hubspot.portal_id');
         $response = $this->api->email()->subscriptionStatus($portalID, $email);
@@ -267,11 +266,11 @@ class Hubspot
      */
     public function mergeIfExists(array $contact): array
     {
-        if (!array_get($contact, 'email')) {
+        if (!data_get($contact, 'email')) {
             return $contact;
         }
 
-        $existing = $this->getContactPropertiesByEmail(array_get($contact, 'email'));
+        $existing = $this->getContactPropertiesByEmail(data_get($contact, 'email'));
         if (!$existing) {
             return $contact;
         }
@@ -302,16 +301,16 @@ class Hubspot
         ];
 
         foreach ($fieldsToMerge as $e) {
-            if (array_get($contact, $e) || array_get($existing, $e)) {
-                $contact[$e] = self::mergeMultiString(array_get($contact, $e) ?: '', array_get($existing, $e) ?: '');
+            if (data_get($contact, $e) || data_get($existing, $e)) {
+                $contact[$e] = self::mergeMultiString(data_get($contact, $e) ?: '', data_get($existing, $e) ?: '');
             }
         }
 
         // Do this separately because the glue is , not ;
-        if (array_get($contact, 'enquiry_listing_references') || array_get($existing, 'enquiry_listing_references')) {
+        if (data_get($contact, 'enquiry_listing_references') || data_get($existing, 'enquiry_listing_references')) {
             $contact['enquiry_listing_references'] = self::mergeMultiString(
-                array_get($contact, 'enquiry_listing_references', ''),
-                array_get($existing, 'enquiry_listing_references', ''),
+                data_get($contact, 'enquiry_listing_references', ''),
+                data_get($existing, 'enquiry_listing_references', ''),
                 ','
             );
         }
@@ -319,16 +318,16 @@ class Hubspot
         return $contact;
     }
 
-    public function getContactByID(int $vid): StdClass
+    public function getContactByID(int $vid): object
     {
         return $this->api->contacts()->getById($vid)->data;
     }
 
-    public function getContactByIDCached(int $vid): StdClass
+    public function getContactByIDCached(int $vid): object
     {
         $key = self::key([ 'getContactByID', $vid, ], [ $this->api->client->key, ]);
 
-        return Cache::remember($key, 10, function () use ($vid) {
+        return Cache::remember($key, 10 * 60, function () use ($vid) {
             return $this->getContactByID($vid);
         });
     }
