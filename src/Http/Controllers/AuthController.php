@@ -5,6 +5,7 @@ namespace Rawson\Shared\Http\Controllers;
 use Auth;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -32,6 +33,11 @@ class AuthController extends Controller
         $user->save();
 
         Auth::login($user);
+
+        if ($user->wasRecentlyCreated) {
+            event(new Registered($user));
+        }
+
         return $user;
     }
 
