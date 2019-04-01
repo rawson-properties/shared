@@ -29,6 +29,16 @@ class Agent extends Model
         return $this->employee->person->FULLNAME;
     }
 
+    public function getFirstNameAttribute(): string
+    {
+        return $this->employee->person->FIRSTNAME;
+    }
+
+    public function getLastNameAttribute(): string
+    {
+        return $this->employee->person->LASTNAME;
+    }
+
     public function getEmailAttribute(): string
     {
         return $this->employee->person->EMAIL;
