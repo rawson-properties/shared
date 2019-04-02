@@ -41,9 +41,18 @@ class AuthController extends Controller
         return $user;
     }
 
-    public function login()
+    /*
+     * Set a cookie on this page that says we've seen the message.
+     * If the cookie existed, just redirect to auth without showing.
+     */
+    public function login(Request $request)
     {
-        return view('auth.login');
+        $response = $request->cookie('auth-seen')
+            ? redirect(route('auth.connect'))
+            : response()->view('auth.login')
+            ;
+
+        return $response->cookie('auth-seen', 'true', 7200);
     }
 
     public function connect()
