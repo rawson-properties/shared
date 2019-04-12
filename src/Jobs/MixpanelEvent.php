@@ -32,6 +32,6 @@ class MixpanelEvent implements ShouldQueue
             $mp->identify(md5($this->identity));
         }
 
-        $mp->track($this->name, $this->params);
+        $mp->track($this->name, $this->params ?? []);
     }
 }
