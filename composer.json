@@ -5,6 +5,7 @@
     "keywords": [],
     "license": "na",
     "require": {
+        "fzaninotto/faker": "~1.4",
         "php": "^7.2.0",
         "laravel/framework": "5.8.*",
         "mixpanel/mixpanel-php": "^2.6",
