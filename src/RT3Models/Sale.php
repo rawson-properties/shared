@@ -27,4 +27,9 @@ class Sale extends Model
     {
         return $this->hasMany(SaleSaleStatus::class, 'SALEID', 'ID');
     }
+
+    public function agentSaleList()
+    {
+        return $this->hasMany(AgentSaleList::class, 'SALEID', 'ID');
+    }
 }
