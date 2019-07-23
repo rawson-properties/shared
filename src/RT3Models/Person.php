@@ -66,7 +66,12 @@ class Person extends Model
 
     public function sales()
     {
-        return $this->belongsToMany(Sale::class, 'personsales', 'PERSONID', 'SALESID');
+        return $this->belongsToMany(Sale::class, 'personsales', 'PERSONID', 'SALESID')
+            ->withPivot([
+                'PERSONSALESTYPEID',
+                'CLIENTTYPEID',
+            ])
+            ;
     }
 
     public function sellerlist()

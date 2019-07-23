@@ -22,4 +22,9 @@ class Sale extends Model
     {
         return $this->belongsTo(SellerList::class, 'SELLERLISTID', 'ID');
     }
+
+    public function saleSaleStatus()
+    {
+        return $this->hasMany(SaleSaleStatus::class, 'SALEID', 'ID');
+    }
 }
