@@ -9,4 +9,5 @@ class AgentListType extends Model
     const AGENT = 1;
     const REFERRER = 2;
     const AGENTCONTACTED = 3;
+    const LEADCOORDINATOR = 6;
 }
