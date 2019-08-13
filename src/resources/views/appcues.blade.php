@@ -1,6 +1,6 @@
 @auth
     @if (config('appcues.id'))
-        <script src="//fast.appcues.com/{{ config('services.appcues.id') }}.js"></script>
+        <script src="//fast.appcues.com/{{ config('appcues.id') }}.js"></script>
 
         <script>
             window.Appcues.identify('{{ md5(Auth::user()->email) }}', {
