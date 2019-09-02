@@ -61,6 +61,7 @@ class AuthController extends Controller
             ->with([
                 'hd' => 'rawson.co.za',
                 'access_type' => 'offline',
+                'prompt' => 'select_account',
             ])
             ->scopes(config('services.google.scopes', []))
             ->redirect()
