@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Log;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use SevenShores\Hubspot\Exceptions\BadRequest;
 use SevenShores\Hubspot\Factory as HubspotFactory;
 
@@ -70,7 +71,7 @@ class Hubspot
     public static function rejectProperties(array $properties): array
     {
         $properties = collect($properties)->filter(function ($value, $key) {
-            return !starts_with($key, 'hs_');
+            return !Str::startsWith($key, 'hs_');
         });
 
         $rejectProperties = [
