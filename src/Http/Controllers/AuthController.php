@@ -80,15 +80,7 @@ class AuthController extends Controller
             throw $e;
         }
 
-        if (!in_array(Str::after($u->getEmail(), '@'), [
-            'rawson.co.za',
-            'rawson-developers.co.za',
-            'rawsoncommercial.com',
-            'rawsonproperties.com',
-            'rawsonrentals.com',
-        ])) {
-            return abort(500, 'Invalid OAuth domain!');
-        }
+        abort_unless('rawson.co.za' === Str::after($u->getEmail(), '@'), 500, 'Invalid OAuth domain!');
 
         self::handleUser($u);
 
