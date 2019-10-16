@@ -9,7 +9,7 @@ class MandateType extends Model
     const NONE = 1;
     const SOLE = 2;
     const AUCTION = 3;
-    const SHARED = 4;
+    const JOINT = 4;
     const OPEN = 5;
     const PRIVATETENDER = 6;
     const RENTAL = 7;
