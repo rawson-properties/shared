@@ -19,6 +19,7 @@ class Hubspot
 {
     use GeneratesCacheKeys;
 
+    private $key;
     public $api;
 
     private static function makeOptions(Collection $options): Collection
@@ -160,12 +161,13 @@ class Hubspot
 
     public function __construct(string $key = null)
     {
-        $this->api = HubspotFactory::create($key ?: config('hubspot.key'));
+        $this->key = $key ?: config('hubspot.key');
+        $this->api = HubspotFactory::create($this->key);
     }
 
     private function keyGetContactPropertyOptions(string $name): string
     {
-        return self::key([ 'getContactPropertyOptions', $name, ], [ $this->api->client->key, ]);
+        return self::key([ 'getContactPropertyOptions', $name, ], [ $this->key, ]);
     }
 
     public function contactPropertyHasOption(string $name, string $option): bool
@@ -213,7 +215,7 @@ class Hubspot
 
     public function getOwnerIDFromEmail(string $email): ?int
     {
-        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $this->api->client->key, ]);
+        $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $this->key, ]);
         $owners = Cache::remember($key, 15 * 60, function () use ($email) {
             $response = $this->api->owners()->all([
                 'email' => $email,
@@ -326,7 +328,7 @@ class Hubspot
 
     public function getContactByIDCached(int $vid): object
     {
-        $key = self::key([ 'getContactByID', $vid, ], [ $this->api->client->key, ]);
+        $key = self::key([ 'getContactByID', $vid, ], [ $this->key, ]);
 
         return Cache::remember($key, 10 * 60, function () use ($vid) {
             return $this->getContactByID($vid);
