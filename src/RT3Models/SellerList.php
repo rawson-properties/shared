@@ -84,4 +84,9 @@ class SellerList extends Model
     {
         return $this->hasOne(SellerListStatus::class, 'ID', 'SELLERLISTSTATUSID');
     }
+
+    public function rawsoncoza()
+    {
+        return $this->hasOne(Rawsoncoza::class, 'ID', 'RAWSONCOZAID');
+    }
 }
