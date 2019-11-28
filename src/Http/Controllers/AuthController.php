@@ -91,7 +91,7 @@ class AuthController extends Controller
     {
         $person = $request->user()->rt3Person;
         $activeAgents = collect();
-        if ($person) {
+        if ($person && $person->employee) {
             $activeAgents = $person
                 ->employee
                 ->agents()
