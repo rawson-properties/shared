@@ -1,1 +1,0 @@
-{"status":"error","message":"Property values were not valid","correlationId":"877262-cb13-4314-80da-6c2db2e81013","validationResults":[{"isValid":false,"message":"Property \"test\" does not exist","error":"PROPERTY_DOESNT_EXIST","name":"test"}],"requestId":"1ebf53abf619938565ff878afacf2be7"}

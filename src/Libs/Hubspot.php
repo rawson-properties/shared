@@ -100,9 +100,11 @@ class Hubspot
      */
     public static function handleBadRequest(BadRequest $e): BadRequest
     {
-        $message = $e->getMessage();
-        $message = substr($message, strpos($message, '{"status":'));
-        $json = json_decode($message);
+        if (!$e->getPrevious() || !$e->getPrevious()->getResponse()) {
+            return $e;
+        }
+
+        $json = json_decode($e->getPrevious()->getResponse()->getBody());
 
         // If we fail decoding throw the original ex
         if (json_last_error() !== JSON_ERROR_NONE) {
