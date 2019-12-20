@@ -8,15 +8,18 @@ $factory->define(Person::class, function (Generator $faker) {
     $faker->addProvider(new Faker\Provider\en_ZA\PhoneNumber($faker));
     $faker->addProvider(new Faker\Provider\en_ZA\Person($faker));
 
+    $firstName = $faker->firstName();
+    $lastName = $faker->lastName();
+
     return [
         'ID' => $faker->unique->numberBetween(1, 10000000),
         'PHYSICALADDRESSID' => null,
         'TITLEID' => JobTitle::NONE,
         'JOBTITLEID' => null,
         'LANGUAGEPREFERENCEID' => null,
-        'FIRSTNAME' => $faker->firstName(),
+        'FIRSTNAME' => $firstName,
         'CELLPHONE' => $faker->e164PhoneNumber,
-        'LASTNAME' => $faker->lastName(),
+        'LASTNAME' => $lastName,
         'KNOWNAS' => null,
         'EMAIL' => $faker->unique()->safeEmail,
         'FAX' => null,
@@ -34,11 +37,11 @@ $factory->define(Person::class, function (Generator $faker) {
         'TAXNUMBER' => null,
         'COMMENTS' => null,
         'MARITALSTATUSID' => null,
-        'FULLNAME' => null,
+        'FULLNAME' => sprintf('%s %s', $firstName, $lastName),
         'UPDATED' => null,
         'CREATED' => null,
-        'FULLNAMESANITIZED' => null,
-        'CELLPHONESANITIZED' => null,
+        'FULLNAMESANITIZED' => sprintf('%s %s', $firstName, $lastName),
+        'CELLPHONESANITIZED' => $faker->e164PhoneNumber,
         'PHOTOURLSMALL' => null,
         'PHOTOURLLARGE' => null,
         'UUID' => null,
