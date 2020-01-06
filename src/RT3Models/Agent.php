@@ -56,7 +56,7 @@ class Agent extends Model
 
     public function getCellphoneAttribute(): ?string
     {
-        return $this->employee->person->CELLPHONESANITIZED;
+        return $this->employee->person->CELLPHONE;
     }
 
     public function getJobTitleAttribute(): ?string
