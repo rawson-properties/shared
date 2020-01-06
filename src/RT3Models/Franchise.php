@@ -2,6 +2,9 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Franchise extends Model
 {
     protected $table = 'franchise';
@@ -17,12 +20,17 @@ class Franchise extends Model
             ;
     }
 
-    public function businessTypes()
+    public function businessTypes(): BelongsToMany
     {
         return $this->belongsToMany(BusinessType::class, 'franchisebusinesstype', 'FRANCHISEID', 'BUSINESSTYPEID');
     }
 
-    public function stakeholder()
+    public function franchiseClassification(): BelongsTo
+    {
+        return $this->belongsTo(FranchiseClassification::class, 'FRANCHISECLASSIFICATIONID', 'ID');
+    }
+
+    public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(Stakeholder::class, 'STAKEHOLDERID', 'ID');
     }
