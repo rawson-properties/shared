@@ -9,6 +9,7 @@ class RawsonSharedServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/amplitude.php', 'amplitude');
         $this->mergeConfigFrom(__DIR__ . '/../config/hubspot.php', 'hubspot');
         $this->mergeConfigFrom(__DIR__ . '/../config/appcues.php', 'appcues');
         $this->mergeConfigFrom(__DIR__ . '/../config/crisp.php', 'crisp');

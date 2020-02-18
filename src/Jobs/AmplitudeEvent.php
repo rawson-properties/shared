@@ -18,14 +18,14 @@ class AmplitudeEvent implements ShouldQueue
     public function __construct(string $name, array $params = null, string $identity = null)
     {
         $this->name = $name;
-        $this->params = array_merge($params ?? [], [ 'Tool Name' => config('services.amplitude.tool'), ]);
+        $this->params = array_merge($params ?? [], [ 'Tool Name' => config('amplitude.tool'), ]);
         $this->identity = $identity ? md5($identity) : null;
     }
 
     public function handle()
     {
         $payload = (object) [
-            'api_key' => config('services.amplitude.key', '8f2372023f1e7b896604126f64320a88'),
+            'api_key' => config('amplitude.key'),
             'events' => [
                 [
                     'user_id' => $this->identity,
