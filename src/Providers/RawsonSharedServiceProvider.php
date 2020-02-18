@@ -12,6 +12,7 @@ class RawsonSharedServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/hubspot.php', 'hubspot');
         $this->mergeConfigFrom(__DIR__ . '/../config/appcues.php', 'appcues');
         $this->mergeConfigFrom(__DIR__ . '/../config/crisp.php', 'crisp');
+        $this->mergeConfigFrom(__DIR__ . '/../config/img.php', 'img');
 
         view()->addLocation(__DIR__ . '/../resources/views');
 
