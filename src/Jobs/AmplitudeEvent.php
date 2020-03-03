@@ -15,11 +15,11 @@ class AmplitudeEvent implements ShouldQueue
     protected $params;
     protected $identity;
 
-    public function __construct(string $name, array $params = null, string $identity = null)
+    public function __construct(string $name, array $params = null, string $identity = 'Unknown')
     {
         $this->name = $name;
         $this->params = array_merge($params ?? [], [ 'Tool Name' => config('amplitude.tool'), ]);
-        $this->identity = $identity ? md5($identity) : null;
+        $this->identity = md5($identity);
     }
 
     public function handle()
