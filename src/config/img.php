@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'base_url' => env('IMG_BASE_URL', 'https://i.rawson.co.za'),
-    'key' => env('IMG_KEY', 'base64:2OG2i6Sxaf4agp/83V3/0r/jPU8ZfDHe/J7PZKCJigQ='),
+    'url' => env('IMG_BASE_URL', 'https://image.rawson.co.za'),
+    'key' => env('IMG_KEY', 'base64:p+TWhSqhmcjh2pjfvSmhZ1kS4eRpRs7tjmV6NZpK2lU='),
 ];

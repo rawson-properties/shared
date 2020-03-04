@@ -10,7 +10,7 @@ class Img
             's' => self::makeSig($path, $params),
         ]));
 
-        return sprintf('%s/%s?%s', config('img.base_url'), $path, $query);
+        return sprintf('%s/%s?%s', config('img.url'), $path, $query);
     }
 
     private static function makeSig(string $path, array $params = []): string
