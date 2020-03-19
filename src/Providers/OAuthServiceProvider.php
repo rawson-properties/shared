@@ -6,7 +6,7 @@ use App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
-class OAuthServiceServiceProvider extends ServiceProvider
+class OAuthServiceProvider extends ServiceProvider
 {
     public function register()
     {
