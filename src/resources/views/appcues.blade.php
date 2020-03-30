@@ -11,8 +11,11 @@
                     last_name: '{{ Auth::user()->default_agent->last_name }}',
                 @endif
                 {{ $key }}_account_created_at: {{ Auth::user()->created_at->timestamp }},
+                {{ $key }}_account_seen_at: {{ now()->timestamp }},
                 {{ $key }}_account_age_days: {{ Auth::user()->created_at->diffInDays(now()) }},
             });
+
+            window.Appcues.track("{{ $key }}_account_seen_at");
         </script>
     @endif
 @endauth
