@@ -100,31 +100,29 @@ class Hubspot
      */
     public static function handleBadRequest(BadRequest $e): BadRequest
     {
-        if (!$e->getPrevious() || !$e->getPrevious()->getResponse()) {
-            return $e;
-        }
-
-        $json = json_decode($e->getPrevious()->getResponse()->getBody());
+        $json = json_decode($e->getResponse()->getBody());
 
         // If we fail decoding throw the original ex
         if (json_last_error() !== JSON_ERROR_NONE) {
             return $e;
         }
 
-        // If there's no validationResults, throw original e
+        // If there's no errors list, throw original e
         try {
-            $validationError = $json->validationResults[0];
+            $error = $json->errors[0];
         } catch (Exception $ex) {
             return $e;
         }
 
-        switch ($validationError->error) {
+        switch ($error->errorType) {
             case 'INVALID_EMAIL':
-                return new InvalidEmail($validationError->message, $e->getCode(), $e);
+                return new InvalidEmail($error->message, $e->getCode(), $e);
             case 'INVALID_OPTION':
-                return new InvalidOption($validationError, $e->getCode(), $e);
+                return new InvalidOption($error, $e->getCode(), $e);
             case 'PROPERTY_DOESNT_EXIST':
-                return new PropertyDoesntExist($validationError->message, $e->getCode(), $e);
+                return new PropertyDoesntExist($error->message, $e->getCode(), $e);
+            case 'REQUIRED_FIELD':
+                return new BadRequest($error->message, $e->getCode(), $e);
             default:
                 return $e;
         }
