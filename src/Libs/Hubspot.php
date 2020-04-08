@@ -261,7 +261,7 @@ class Hubspot
     public function getEmailSubscriptionStatus(string $email, string $portalID = null): object
     {
         $portalID = $portalID ?: config('hubspot.portal_id');
-        $response = $this->api->email()->subscriptionStatus($portalID, $email);
+        $response = $this->api->emailSubscription()->subscriptionStatus($email, $portalID);
         return data_get($response, 'data');
     }
 
