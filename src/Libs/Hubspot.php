@@ -85,8 +85,8 @@ class Hubspot
             'num_conversion_events',
         ];
 
-        $properties = $properties->reject(function ($e) use ($rejectProperties) {
-            return in_array($e, $rejectProperties);
+        $properties = $properties->reject(function ($e, $k) use ($rejectProperties) {
+            return in_array($k, $rejectProperties);
         });
 
         return $properties->toArray();
