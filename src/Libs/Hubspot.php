@@ -2,9 +2,6 @@
 
 namespace Rawson\Shared\Libs;
 
-use Rawson\Shared\Libs\Exceptions\Hubspot\InvalidEmail;
-use Rawson\Shared\Libs\Exceptions\Hubspot\InvalidOption;
-use Rawson\Shared\Libs\Exceptions\Hubspot\PropertyDoesntExist;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Cache;
 use Carbon\Carbon;
@@ -93,39 +90,6 @@ class Hubspot
         });
 
         return $properties->toArray();
-    }
-
-    /*
-     * Try to parse the full message in BadRequest for useful detail
-     */
-    public static function handleBadRequest(BadRequest $e): BadRequest
-    {
-        $json = json_decode($e->getResponse()->getBody());
-
-        // If we fail decoding throw the original ex
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return $e;
-        }
-
-        // If there's no errors list, throw original e
-        try {
-            $error = $json->errors[0];
-        } catch (Exception $ex) {
-            return $e;
-        }
-
-        switch ($error->errorType) {
-            case 'INVALID_EMAIL':
-                return new InvalidEmail($error->message, $e->getCode(), $e);
-            case 'INVALID_OPTION':
-                return new InvalidOption($error, $e->getCode(), $e);
-            case 'PROPERTY_DOESNT_EXIST':
-                return new PropertyDoesntExist($error->message, $e->getCode(), $e);
-            case 'REQUIRED_FIELD':
-                return new BadRequest($error->message, $e->getCode(), $e);
-            default:
-                return $e;
-        }
     }
 
     public static function formatDate(string $date): string
