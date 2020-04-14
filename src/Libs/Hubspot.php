@@ -268,13 +268,13 @@ class Hubspot
         ];
 
         foreach ($fieldsToMerge as $e) {
-            if (data_get($contact, $e) || data_get($existing, $e)) {
-                $contact[$e] = self::mergeMultiString(data_get($contact, $e) ?: '', data_get($existing, $e) ?: '');
+            if (data_get($contact, $e) && data_get($existing, $e)) {
+                $contact[$e] = self::mergeMultiString(data_get($contact, $e, ''), data_get($existing, $e, ''));
             }
         }
 
         // Do this separately because the glue is , not ;
-        if (data_get($contact, 'enquiry_listing_references') || data_get($existing, 'enquiry_listing_references')) {
+        if (data_get($contact, 'enquiry_listing_references') && data_get($existing, 'enquiry_listing_references')) {
             $contact['enquiry_listing_references'] = self::mergeMultiString(
                 data_get($contact, 'enquiry_listing_references', ''),
                 data_get($existing, 'enquiry_listing_references', ''),
