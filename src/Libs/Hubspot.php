@@ -76,6 +76,7 @@ class Hubspot
             'associatedcompanyid',
             'associatedcompanylastupdated',
             'createdate',
+            'hubspot_team_id',
             'hubspot_owner_id',
             'hubspot_owner_assigneddate',
             'lastmodifieddate',
