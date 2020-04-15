@@ -84,6 +84,9 @@ class Hubspot
             'lastmodifieddate',
             'lifecyclestage',
             'notes_last_contacted',
+            'notes_last_updated',
+            'num_notes',
+            'num_contacted_notes',
             'num_unique_conversion_events',
             'num_conversion_events',
         ];
