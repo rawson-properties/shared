@@ -84,7 +84,7 @@ class AuthController extends Controller
 
         self::handleUser($u);
 
-        return redirect()->route('welcome');
+        return redirect()->intended(route('welcome'));
     }
 
     public function connection(Request $request)

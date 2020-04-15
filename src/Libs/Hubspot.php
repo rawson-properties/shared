@@ -2,9 +2,6 @@
 
 namespace Rawson\Shared\Libs;
 
-use Rawson\Shared\Libs\Exceptions\Hubspot\InvalidEmail;
-use Rawson\Shared\Libs\Exceptions\Hubspot\InvalidOption;
-use Rawson\Shared\Libs\Exceptions\Hubspot\PropertyDoesntExist;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Cache;
 use Carbon\Carbon;
@@ -91,46 +88,11 @@ class Hubspot
             'num_conversion_events',
         ];
 
-        $properties = $properties->reject(function ($e) use ($rejectProperties) {
-            return in_array($e, $rejectProperties);
+        $properties = $properties->reject(function ($e, $k) use ($rejectProperties) {
+            return in_array($k, $rejectProperties);
         });
 
         return $properties->toArray();
-    }
-
-    /*
-     * Try to parse the full message in BadRequest for useful detail
-     */
-    public static function handleBadRequest(BadRequest $e): BadRequest
-    {
-        if (!$e->getPrevious() || !$e->getPrevious()->getResponse()) {
-            return $e;
-        }
-
-        $json = json_decode($e->getPrevious()->getResponse()->getBody());
-
-        // If we fail decoding throw the original ex
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return $e;
-        }
-
-        // If there's no validationResults, throw original e
-        try {
-            $validationError = $json->validationResults[0];
-        } catch (Exception $ex) {
-            return $e;
-        }
-
-        switch ($validationError->error) {
-            case 'INVALID_EMAIL':
-                return new InvalidEmail($validationError->message, $e->getCode(), $e);
-            case 'INVALID_OPTION':
-                return new InvalidOption($validationError, $e->getCode(), $e);
-            case 'PROPERTY_DOESNT_EXIST':
-                return new PropertyDoesntExist($validationError->message, $e->getCode(), $e);
-            default:
-                return $e;
-        }
     }
 
     public static function formatDate(string $date): string
@@ -264,7 +226,7 @@ class Hubspot
     public function getEmailSubscriptionStatus(string $email, string $portalID = null): object
     {
         $portalID = $portalID ?: config('hubspot.portal_id');
-        $response = $this->api->email()->subscriptionStatus($portalID, $email);
+        $response = $this->api->emailSubscription()->subscriptionStatus($email, $portalID);
         return data_get($response, 'data');
     }
 
@@ -309,13 +271,13 @@ class Hubspot
         ];
 
         foreach ($fieldsToMerge as $e) {
-            if (data_get($contact, $e) || data_get($existing, $e)) {
-                $contact[$e] = self::mergeMultiString(data_get($contact, $e) ?: '', data_get($existing, $e) ?: '');
+            if (data_get($contact, $e) && data_get($existing, $e)) {
+                $contact[$e] = self::mergeMultiString(data_get($contact, $e, ''), data_get($existing, $e, ''));
             }
         }
 
         // Do this separately because the glue is , not ;
-        if (data_get($contact, 'enquiry_listing_references') || data_get($existing, 'enquiry_listing_references')) {
+        if (data_get($contact, 'enquiry_listing_references') && data_get($existing, 'enquiry_listing_references')) {
             $contact['enquiry_listing_references'] = self::mergeMultiString(
                 data_get($contact, 'enquiry_listing_references', ''),
                 data_get($existing, 'enquiry_listing_references', ''),

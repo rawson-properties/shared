@@ -3,7 +3,6 @@
 namespace Rawson\Shared\RT3Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Rawson\Shared\Libs\Hubspot;
 
 class Agent extends Model
 {
