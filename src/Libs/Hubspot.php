@@ -5,6 +5,7 @@ namespace Rawson\Shared\Libs;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Cache;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Exception;
 use Log;
 use Illuminate\Support\Collection;
@@ -145,7 +146,8 @@ class Hubspot
 
     public function getContactPropertyOptions(string $name): Collection
     {
-        return Cache::remember($this->keyGetContactPropertyOptions($name), 60 * 60, function () use ($name) {
+        $key = $this->keyGetContactPropertyOptions($name);
+        return Cache::remember($key, CarbonInterval::hours(6), function () use ($name) {
             $response = $this->api->contactProperties()->get($name);
             return collect($response->options)->pluck('value');
         });
@@ -184,7 +186,7 @@ class Hubspot
     public function getOwnerIDFromEmail(string $email): ?int
     {
         $key = self::key([ 'getOwnerIDFromEmail', ], [ $email, $this->key, ]);
-        $owners = Cache::remember($key, 15 * 60, function () use ($email) {
+        $owners = Cache::remember($key, CarbonInterval::hours(6), function () use ($email) {
             $response = $this->api->owners()->all([
                 'email' => $email,
                 'includeInactive' => false,
@@ -297,8 +299,7 @@ class Hubspot
     public function getContactByIDCached(int $vid): object
     {
         $key = self::key([ 'getContactByID', $vid, ], [ $this->key, ]);
-
-        return Cache::remember($key, 10 * 60, function () use ($vid) {
+        return Cache::remember($key, CarbonInterval::day(), function () use ($vid) {
             return $this->getContactByID($vid);
         });
     }

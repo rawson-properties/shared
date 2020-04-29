@@ -15,8 +15,8 @@ trait HasRT3Person
     {
         if ($this->defaultAgent === false) {
             $this->defaultAgent = session('user.default_rt3_agent_id')
-                ? RT3Agent::findOrFail(session('user.default_rt3_agent_id'))
-                : object_get($this, 'rt3Person.default_agent')
+                ? RT3Agent::findOrFailCached(session('user.default_rt3_agent_id'))
+                : RT3Person::defaultAgentForPersonID($this->rt3_person_id)
                 ;
         }
 

@@ -2,9 +2,10 @@
 
 namespace Rawson\Shared\Libs;
 
+use Cache;
+use Carbon\CarbonInterval;
 use GuzzleHttp\Client as GuzzleClient;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
-use Cache;
 
 class PassportClient
 {
@@ -27,7 +28,7 @@ class PassportClient
     {
         $key = self::key([ 'getToken', ], [ $this->baseURL, $this->clientID, $this->clientSecret, ]);
 
-        return Cache::remember($key, 24 * 60 * 60, function () {
+        return Cache::remember($key, CarbonInterval::day(), function () {
             $guzzle = new GuzzleClient();
             $response = $guzzle->post($this->baseURL . '/oauth/token', [
                 'form_params' => [

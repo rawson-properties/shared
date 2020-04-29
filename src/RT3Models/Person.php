@@ -3,6 +3,7 @@
 namespace Rawson\Shared\RT3Models;
 
 use Cache;
+use Carbon\CarbonInterval;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 
 class Person extends Model
@@ -20,8 +21,8 @@ class Person extends Model
     public function getDefaultAgentAttribute(): ?Agent
     {
         if ($this->defaultAgent === false) {
-            $key = self::key([ 'getDefaultAgentAttribute', $this->ID, ]);
-            $this->defaultAgent = Cache::remember($key, 5 * 60, function () {
+            $key = self::key([ __FUNCTION__, $this->ID, ]);
+            $this->defaultAgent = Cache::remember($key, CarbonInterval::hours(6), function () {
                 if (!$this->employee) {
                     return;
                 }
@@ -36,6 +37,23 @@ class Person extends Model
         }
 
         return $this->defaultAgent;
+    }
+
+    public static function findOrFailCached(int $id): ?self
+    {
+        $key = self::key([ __FUNCTION__, $id, ]);
+        return Cache::remember($key, CarbonInterval::day(), function () use ($id) {
+            return self::findOrFail($id);
+        });
+    }
+
+    public static function defaultAgentForPersonID(int $id): ?Agent
+    {
+        $key = self::key([ __FUNCTION__, $id, ]);
+        return Cache::remember($key, CarbonInterval::hours(6), function () use ($id) {
+            $person = self::findOrFailCached($id);
+            return $person->default_agent;
+        });
     }
 
     // Relations

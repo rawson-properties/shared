@@ -2,9 +2,10 @@
 
 namespace Rawson\Shared\Libs;
 
+use Cache;
+use Carbon\CarbonInterval;
 use GuzzleHttp\Client as GuzzleClient;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
-use Cache;
 
 class Hubglue
 {
@@ -21,7 +22,7 @@ class Hubglue
             config('services.hubglue.client_secret'),
         ]);
 
-        return Cache::remember($key, 24 * 60 * 60, function () {
+        return Cache::remember($key, CarbonInterval::day(), function () {
             $guzzle = new GuzzleClient();
             $response = $guzzle->post(config('services.hubglue.url') . '/oauth/token', [
                 'form_params' => [
