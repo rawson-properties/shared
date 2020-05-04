@@ -67,36 +67,6 @@ class Hubspot
         return $properties;
     }
 
-    public static function rejectProperties(array $properties): array
-    {
-        $properties = collect($properties)->filter(function ($value, $key) {
-            return !Str::startsWith($key, 'hs_');
-        });
-
-        $rejectProperties = [
-            'associatedcompanyid',
-            'associatedcompanylastupdated',
-            'createdate',
-            'hubspot_team_id',
-            'hubspot_owner_id',
-            'hubspot_owner_assigneddate',
-            'lastmodifieddate',
-            'lifecyclestage',
-            'notes_last_contacted',
-            'notes_last_updated',
-            'num_notes',
-            'num_contacted_notes',
-            'num_unique_conversion_events',
-            'num_conversion_events',
-        ];
-
-        $properties = $properties->reject(function ($e, $k) use ($rejectProperties) {
-            return in_array($k, $rejectProperties);
-        });
-
-        return $properties->toArray();
-    }
-
     public static function formatDate(string $date): string
     {
         $date = Carbon::parse($date, 'UTC');
@@ -137,6 +107,30 @@ class Hubspot
     private function keyGetContactPropertyOptions(string $name): string
     {
         return self::key([ 'getContactPropertyOptions', $name, ], [ $this->key, ]);
+    }
+
+    private function getHubContactProperties(): Collection
+    {
+        $options = $this->api->contactProperties()->all();
+        return collect($options->data)
+            ->reject(function ($e) {
+                return $e->readOnlyValue
+                    // || $e->hubspotDefined
+                    || $e->hidden
+                    || $e->calculated
+                    || $e->deleted
+                    ;
+            })
+            ->pluck('name')
+            ;
+    }
+
+    public function getHubContactPropertiesCached(): Collection
+    {
+        $key = self::key([ __FUNCTION__, ], [ $this->key, ]);
+        return Cache::remember($key, CarbonInterval::day(), function () {
+            return $this->getHubContactProperties();
+        });
     }
 
     public function contactPropertyHasOption(string $name, string $option): bool
@@ -329,5 +323,14 @@ class Hubspot
         }
 
         return $options->implode(';');
+    }
+
+    public function rejectProperties(array $properties): array
+    {
+        $hubProperties = $this->getHubContactPropertiesCached()->toArray();
+
+        return array_filter($properties, function ($e) use ($hubProperties) {
+            return in_array($e, $hubProperties);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
