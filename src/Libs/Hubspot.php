@@ -115,11 +115,15 @@ class Hubspot
         return collect($options->data)
             ->reject(function ($e) {
                 return $e->readOnlyValue
+                    // || $e->readOnlyDefinition
                     // || $e->hubspotDefined
                     || $e->hidden
                     || $e->calculated
                     || $e->deleted
                     ;
+            })
+            ->reject(function ($e) {
+                return Str::of($e->name)->startsWith([ 'hs_', 'hubspot_', ]);
             })
             ->pluck('name')
             ;
