@@ -123,7 +123,11 @@ class Hubspot
                     ;
             })
             ->reject(function ($e) {
-                return Str::of($e->name)->startsWith([ 'hs_', 'hubspot_', ]);
+                return Str::of($e->name)->startsWith([
+                    'hs_',
+                    'hubspot_',
+                    'lifecyclestage',
+                ]);
             })
             ->pluck('name')
             ;
