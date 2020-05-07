@@ -4,9 +4,12 @@ namespace Rawson\Shared\RT3Models;
 
 use DB;
 use Illuminate\Support\Collection;
+use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Office extends Model
 {
+    use FindOrFailCached;
+
     protected $table = 'office';
     protected $dates = [
         'CREATED',

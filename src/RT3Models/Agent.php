@@ -2,27 +2,17 @@
 
 namespace Rawson\Shared\RT3Models;
 
-use Cache;
-use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Builder;
-use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
+use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Agent extends Model
 {
-    use GeneratesCacheKeys;
+    use FindOrFailCached;
 
     protected $table = 'agentlist';
     protected $dates = [
         'UPDATED',
     ];
-
-    public static function findOrFailCached(int $id): ?self
-    {
-        $key = self::key([ __FUNCTION__, $id, ]);
-        return Cache::remember($key, CarbonInterval::day(), function () use ($id) {
-            return self::findOrFail($id);
-        });
-    }
 
     // @TODO: See which projects use this method and refactor in favour of attribute
     public function getName(): string

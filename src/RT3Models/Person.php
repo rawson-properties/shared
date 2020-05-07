@@ -5,10 +5,11 @@ namespace Rawson\Shared\RT3Models;
 use Cache;
 use Carbon\CarbonInterval;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
+use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Person extends Model
 {
-    use GeneratesCacheKeys;
+    use FindOrFailCached, GeneratesCacheKeys;
 
     protected $table = 'person';
     protected $dates = [
@@ -37,14 +38,6 @@ class Person extends Model
         }
 
         return $this->defaultAgent;
-    }
-
-    public static function findOrFailCached(int $id): ?self
-    {
-        $key = self::key([ __FUNCTION__, $id, ]);
-        return Cache::remember($key, CarbonInterval::day(), function () use ($id) {
-            return self::findOrFail($id);
-        });
     }
 
     public static function defaultAgentForPersonID(int $id): ?Agent

@@ -30,7 +30,12 @@ trait HasRT3Person
     public function getDefaultOfficeAttribute(): ?RT3Office
     {
         if ($this->defaultOffice === false) {
-            $this->defaultOffice = object_get($this, 'default_agent.office');
+            $agent = $this->default_agent;
+            if (!$agent || !$agent->OFFICEID) {
+                return null;
+            }
+
+            $this->defaultOffice = RT3Office::findOrFailCached($agent->OFFICEID);
         }
 
         return $this->defaultOffice;
