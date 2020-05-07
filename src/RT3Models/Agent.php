@@ -2,12 +2,15 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Cache;
+use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Builder;
+use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Agent extends Model
 {
-    use FindOrFailCached;
+    use FindOrFailCached, GeneratesCacheKeys;
 
     protected $table = 'agentlist';
     protected $dates = [
@@ -63,11 +66,18 @@ class Agent extends Model
 
     public function getJobTitleAttribute(): ?string
     {
-        if ($this->employee->person->JOBTITLEID === 1) {
-            return null;
+        if (!array_key_exists('job_title', $this->attributes)) {
+            $key = self::key([ __FUNCTION__, $this->ID, ]);
+            $this->attributes['job_title'] = Cache::remember($key, CarbonInterval::hours(6), function () {
+                if ($this->employee->person->JOBTITLEID === 1) {
+                    return null;
+                }
+
+                return $this->employee->person->jobTitle->ITEM;
+            });
         }
 
-        return $this->employee->person->jobTitle->ITEM;
+        return $this->attributes['job_title'];
     }
 
     public function scopeIsActive(Builder $query): Builder
