@@ -39,4 +39,9 @@ class Property extends Model
     {
         return $this->hasMany(SellerReferalSummary::class, 'propertyid', 'ID');
     }
+
+    public function propertyFeatures()
+    {
+        return $this->hasMany(PropertyFeature::class, 'PROPERTYID', 'ID');
+    }
 }

@@ -80,6 +80,12 @@ class LightProxy
         return collect(self::factory()->get('/sectionals?q=' . $query, $timeout));
     }
 
+    public static function sectionalReport(int $id, int $timeout = 5): object
+    {
+        $url = sprintf('/sectional/%s/report', $id);
+        return self::factory()->get($url, $timeout);
+    }
+
     public static function suburbs(string $query, int $timeout = 5): Collection
     {
         return collect(self::factory()->get('/suburbs?q=' . $query, $timeout));
