@@ -2,7 +2,7 @@
 
 namespace Rawson\Shared\RT3Models;
 
-class PropertyFeatures extends Model
+class PropertyFeature extends Model
 {
     protected $table = 'propertyfeatures';
 }
