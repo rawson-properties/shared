@@ -13,7 +13,7 @@
                     </p>
 
                     <p class="card-text">
-                        When you click the 'Sign-In' button below you will be redirected to a Google Sign-In page which prompts you to enter either your <code>@rawson.co.za</code> or <code>@rawsonproperties.com</code> account details. Once you do so successfully you will be redirected back to {{ config('app.name') }} and be authenticated.
+                        When you click the 'Sign-In' button below you will be redirected to a Google Sign-In page which prompts you to enter your <code>@rawson.co.za</code> account details. Once you do so successfully you will be redirected back to {{ config('app.name') }} and be authenticated.
                     </p>
 
                     <p class="card-text">
