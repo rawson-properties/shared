@@ -13,4 +13,5 @@ class ActivityType extends Model
     const PROPERTY_SHOWHOUSE = 55;
     const CONTACT_VIEWING = 61;
     const CONTACT_SHOWHOUSE = 63;
+    const LISTING_SHOWHOUSE = 74;
 }
