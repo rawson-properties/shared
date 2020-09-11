@@ -10,13 +10,11 @@
         "php": "^7.4.0",
         "laravel/framework": "^7.0",
         "guzzlehttp/guzzle": "~6.0",
-        "laravel/ui": "^2.0"
+        "laravel/ui": "^2.0",
+        "laravel/socialite": "^5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5"
-    },
-    "suggest": {
-        "laravel/socialite": "Required if you're going to make use of OAuth/SSO."
     },
     "autoload": {
         "psr-4": {
@@ -31,6 +29,7 @@
             "providers": [
                 "Rawson\\Shared\\Providers\\EventServiceProvider",
                 "Rawson\\Shared\\Providers\\RawsonSharedServiceProvider",
+                "Rawson\\Shared\\Providers\\OAuthServiceProvider",
                 "Rawson\\Shared\\Providers\\PingServiceProvider"
             ]
         }

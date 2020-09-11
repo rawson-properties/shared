@@ -11,6 +11,8 @@ class OAuthServiceProvider extends ServiceProvider
     public function register()
     {
         App::register(\Laravel\Socialite\SocialiteServiceProvider::class);
+
+        $this->mergeConfigFrom(__DIR__ . '/../config/oauth.php', 'oauth');
     }
 
     public function map()
