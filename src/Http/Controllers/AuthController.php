@@ -66,7 +66,7 @@ class AuthController extends Controller
             ->with([
                 'hd' => $providerConfig['domain'],
                 'access_type' => 'offline',
-                // 'prompt' => 'select_account',
+                'prompt' => 'select_account',
             ])
             ->scopes(config('services.oauth.scopes', config('oauth.scopes')))
             ->redirect()
