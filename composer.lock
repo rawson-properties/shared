@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c006946626702a87de2ac8c1caeb60bd",
+    "content-hash": "db7e970370398110a26d766ad2fb4b67",
     "packages": [
         {
             "name": "brick/math",
@@ -577,68 +577,17 @@
             "time": "2019-07-01T23:21:34+00:00"
         },
         {
-            "name": "hubspot/hubspot-php",
-            "version": "v2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/HubSpot/hubspot-php.git",
-                "reference": "8794b4ab89bd3c78d6a5bb14e04b881d9a0352f8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/HubSpot/hubspot-php/zipball/8794b4ab89bd3c78d6a5bb14e04b881d9a0352f8",
-                "reference": "8794b4ab89bd3c78d6a5bb14e04b881d9a0352f8",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/guzzle": "~6.0",
-                "php": ">=7.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.13",
-                "phpspec/phpspec": "^3.4",
-                "phpunit/phpunit": "~5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SevenShores\\Hubspot\\": "src/"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Ryan Winchester",
-                    "email": "fungku@gmail.com",
-                    "homepage": "http://ryanwinchester.ca"
-                }
-            ],
-            "description": "HubSpot PHP API client",
-            "keywords": [
-                "api",
-                "hubspot"
-            ],
-            "time": "2020-08-28T09:27:00+00:00"
-        },
-        {
             "name": "laravel/framework",
-            "version": "v7.28.1",
+            "version": "v7.28.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f7493ab717ca2a9598b1db2d6a3bae8ac8c755e8"
+                "reference": "0956b0688d96565044074b77f521a653d9fce5fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f7493ab717ca2a9598b1db2d6a3bae8ac8c755e8",
-                "reference": "f7493ab717ca2a9598b1db2d6a3bae8ac8c755e8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/0956b0688d96565044074b77f521a653d9fce5fb",
+                "reference": "0956b0688d96565044074b77f521a653d9fce5fb",
                 "shasum": ""
             },
             "require": {
@@ -783,20 +732,20 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-09-09T15:02:46+00:00"
+            "time": "2020-09-15T14:48:02+00:00"
         },
         {
             "name": "laravel/socialite",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/socialite.git",
-                "reference": "35d71b24fd25f797eb67d060c578b3c292314aa6"
+                "reference": "61ad2b5f98e28f8e4e479851f8744b43ebbb9b46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/socialite/zipball/35d71b24fd25f797eb67d060c578b3c292314aa6",
-                "reference": "35d71b24fd25f797eb67d060c578b3c292314aa6",
+                "url": "https://api.github.com/repos/laravel/socialite/zipball/61ad2b5f98e28f8e4e479851f8744b43ebbb9b46",
+                "reference": "61ad2b5f98e28f8e4e479851f8744b43ebbb9b46",
                 "shasum": ""
             },
             "require": {
@@ -848,31 +797,31 @@
                 "laravel",
                 "oauth"
             ],
-            "time": "2020-09-08T15:11:41+00:00"
+            "time": "2020-09-12T14:40:16+00:00"
         },
         {
             "name": "laravel/ui",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "2ccaa3b821ea8ac7e05393b946d0578bdb46099b"
+                "reference": "f5398544a9cd4804a42d09ce51735e37cd51ea2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/2ccaa3b821ea8ac7e05393b946d0578bdb46099b",
-                "reference": "2ccaa3b821ea8ac7e05393b946d0578bdb46099b",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/f5398544a9cd4804a42d09ce51735e37cd51ea2d",
+                "reference": "f5398544a9cd4804a42d09ce51735e37cd51ea2d",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^7.0|^8.0",
-                "illuminate/filesystem": "^7.0|^8.0",
-                "illuminate/support": "^7.0|^8.0",
+                "illuminate/console": "^7.0",
+                "illuminate/filesystem": "^7.0",
+                "illuminate/support": "^7.0",
                 "php": "^7.2.5"
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^8.0|^9.0"
+                "phpunit/phpunit": "^8.0"
             },
             "type": "library",
             "extra": {
@@ -903,20 +852,20 @@
                 "laravel",
                 "ui"
             ],
-            "time": "2020-09-09T12:07:59+00:00"
+            "time": "2020-09-11T15:31:52+00:00"
         },
         {
             "name": "league/commonmark",
-            "version": "1.5.4",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "21819c989e69bab07e933866ad30c7e3f32984ba"
+                "reference": "45832dfed6007b984c0d40addfac48d403dc6432"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/21819c989e69bab07e933866ad30c7e3f32984ba",
-                "reference": "21819c989e69bab07e933866ad30c7e3f32984ba",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/45832dfed6007b984c0d40addfac48d403dc6432",
+                "reference": "45832dfed6007b984c0d40addfac48d403dc6432",
                 "shasum": ""
             },
             "require": {
@@ -928,7 +877,7 @@
             },
             "require-dev": {
                 "cebe/markdown": "~1.0",
-                "commonmark/commonmark.js": "0.29.1",
+                "commonmark/commonmark.js": "0.29.2",
                 "erusev/parsedown": "~1.0",
                 "ext-json": "*",
                 "github/gfm": "0.29.0",
@@ -998,7 +947,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-18T01:19:12+00:00"
+            "time": "2020-09-13T14:44:46+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1306,16 +1255,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.39.2",
+            "version": "2.40.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "326efde1bc09077a26cb77f6e2e32e13f06c27f2"
+                "reference": "6c7646154181013ecd55e80c201b9fd873c6ee5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/326efde1bc09077a26cb77f6e2e32e13f06c27f2",
-                "reference": "326efde1bc09077a26cb77f6e2e32e13f06c27f2",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/6c7646154181013ecd55e80c201b9fd873c6ee5d",
+                "reference": "6c7646154181013ecd55e80c201b9fd873c6ee5d",
                 "shasum": ""
             },
             "require": {
@@ -1391,7 +1340,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-10T12:16:42+00:00"
+            "time": "2020-09-11T19:00:58+00:00"
         },
         {
             "name": "opis/closure",
