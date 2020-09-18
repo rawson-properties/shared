@@ -90,7 +90,7 @@ class AuthController extends Controller
 
         abort_unless(config('services.google.domain') === Str::after($u->getEmail(), '@'), 500, 'Invalid OAuth domain!');
 
-        self::handleUser($u);
+        static::handleUser($u);
 
         return redirect()->intended(route('welcome'));
     }
