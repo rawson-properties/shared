@@ -2,29 +2,29 @@
 
 namespace Rawson\Shared\Tests\Hubspot;
 
-use Rawson\Shared\Libs\Hubspot;
+use Rawson\Shared\Libs\HubspotHelpers;
 use PHPUnit\Framework\TestCase;
 
 class MergeMultiStringTest extends TestCase
 {
     public function testMergeMultiString()
     {
-        $result = Hubspot::mergeMultiString('', '');
+        $result = HubspotHelpers::mergeMultiString('', '');
         $this->assertEquals($result, '');
 
-        $result = Hubspot::mergeMultiString('first', '');
+        $result = HubspotHelpers::mergeMultiString('first', '');
         $this->assertEquals($result, 'first');
 
-        $result = Hubspot::mergeMultiString('first', 'second');
+        $result = HubspotHelpers::mergeMultiString('first', 'second');
         $this->assertEquals($result, 'first;second');
 
-        $result = Hubspot::mergeMultiString('first', 'second;second');
+        $result = HubspotHelpers::mergeMultiString('first', 'second;second');
         $this->assertEquals($result, 'first;second');
 
-        $result = Hubspot::mergeMultiString('first;second', 'first;second');
+        $result = HubspotHelpers::mergeMultiString('first;second', 'first;second');
         $this->assertEquals($result, 'first;second');
 
-        $result = Hubspot::mergeMultiString('first', 'second', ',');
+        $result = HubspotHelpers::mergeMultiString('first', 'second', ',');
         $this->assertEquals($result, 'first,second');
     }
 }

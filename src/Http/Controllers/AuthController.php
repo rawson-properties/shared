@@ -5,11 +5,13 @@ namespace Rawson\Shared\Http\Controllers;
 use Auth;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Rawson\Shared\Libs\OAuth;
 use Socialite;
 
 class AuthController extends Controller
@@ -55,21 +57,27 @@ class AuthController extends Controller
         return $response->cookie('auth-seen', 'true', 7200);
     }
 
-    public function connect()
+    public function connect(Request $request)
     {
+        $providerName = $request->input('provider', 'rawsoncoza');
+        $providerConfig = OAuth::getSetConfig($providerName);
+
         return Socialite::driver('google')
             ->with([
-                'hd' => 'rawson.co.za',
+                'hd' => $providerConfig['domain'],
                 'access_type' => 'offline',
                 'prompt' => 'select_account',
             ])
-            ->scopes(config('services.google.scopes', []))
+            ->scopes(config('services.oauth.scopes', config('oauth.scopes')))
             ->redirect()
             ;
     }
 
     public function callback(Request $request)
     {
+        $providerName = Str::of($request->input('hd'))->replace('.', '');
+        OAuth::getSetConfig($providerName);
+
         try {
             $u = Socialite::driver('google')->user();
         } catch (InvalidStateException $e) {
@@ -80,9 +88,9 @@ class AuthController extends Controller
             throw $e;
         }
 
-        abort_unless('rawson.co.za' === Str::after($u->getEmail(), '@'), 500, 'Invalid OAuth domain!');
+        abort_unless(config('services.google.domain') === Str::after($u->getEmail(), '@'), 500, 'Invalid OAuth domain!');
 
-        self::handleUser($u);
+        static::handleUser($u);
 
         return redirect()->intended(route('welcome'));
     }
