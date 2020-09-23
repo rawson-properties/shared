@@ -8,7 +8,7 @@
         "fzaninotto/faker": "~1.4",
         "php": "^7.4.0",
         "laravel/framework": "^7.0",
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "^7.0.1",
         "laravel/ui": "^2.0",
         "laravel/socialite": "^5.0"
     },
