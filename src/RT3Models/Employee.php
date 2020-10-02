@@ -19,6 +19,11 @@ class Employee extends Model
         return $this->hasMany(Agent::class, 'EMPLOYEEID', 'ID');
     }
 
+    public function courseHistory()
+    {
+        return $this->hasMany(CourseHistory::class, 'EMPLOYEEID', 'ID');
+    }
+
     public function repSalesDetails()
     {
         return $this->hasMany(RepSalesDetail::class, 'employeeid', 'ID');

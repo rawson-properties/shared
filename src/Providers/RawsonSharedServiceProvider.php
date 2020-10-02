@@ -3,6 +3,7 @@
 namespace Rawson\Shared\Providers;
 
 use App;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class RawsonSharedServiceProvider extends ServiceProvider
@@ -23,6 +24,8 @@ class RawsonSharedServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        Paginator::useBootstrap();
+
         /* This has all changed for Laravel 8
         if (App::environment('testing')) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
