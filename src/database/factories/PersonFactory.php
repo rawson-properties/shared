@@ -12,8 +12,8 @@ class PersonFactory extends Factory
 
     public function definition()
     {
-        $this->faker->addProvider(new Faker\Provider\en_ZA\PhoneNumber($faker));
-        $this->faker->addProvider(new Faker\Provider\en_ZA\Person($faker));
+        $this->faker->addProvider(new \Faker\Provider\en_ZA\PhoneNumber($this->faker));
+        $this->faker->addProvider(new \Faker\Provider\en_ZA\Person($this->faker));
 
         $firstName = $this->faker->firstName();
         $lastName = $this->faker->lastName();
