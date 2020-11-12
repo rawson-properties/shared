@@ -3,7 +3,10 @@
 @section('content')
     <div class="container-fluid">
         <div class="row align-items-center justify-content-center">
-            <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-4 mt-5">
+            <div
+                class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 mt-5"
+                style="max-width: 450px"
+            >
                 <div class="card p-4">
                     <div class="card-body text-center">
                         <div class="row justify-content-center mb-5">
@@ -18,7 +21,7 @@
 
                         <h5 class="font-weight-normal mb-4">Quick question before you log in</h4>
 
-                        <p class="card-text text-muted mb-5 text-justify">
+                        <p class="card-text text-muted mb-5 text-left">
                             Please confirm which region you're operating in so we can send you to the correct Google sign in page.
                         </p>
 
@@ -27,7 +30,7 @@
 
                             <a
                                 href="{{ route('auth.connect', [ 'provider' => $e->key, ]) }}"
-                                class="btn btn-dark btn-lg btn-block"
+                                class="btn btn-dark btn-block"
                             >{{ $e->name }}</a>
                         @endforeach
 
@@ -36,7 +39,7 @@
 
                             <a
                                 href="{{ route('auth.connect', [ 'provider' => $e->key, ]) }}"
-                                class="btn btn-outline-dark btn-lg btn-block"
+                                class="btn btn-outline-dark btn-block"
                             >{{ $e->name }}</a>
                         @endforeach
                     </div>
