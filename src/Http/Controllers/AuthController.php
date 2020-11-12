@@ -5,6 +5,7 @@ namespace Rawson\Shared\Http\Controllers;
 use Auth;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -17,6 +18,8 @@ use Socialite;
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
+
+    private const COOKIE_PREVIOUS_PROVIDER = 'auth-previous-provider';
 
     public static function handleUser(SocialiteUser $u): User
     {
@@ -49,18 +52,30 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $response = $request->cookie('auth-seen')
-            ? redirect(route('auth.connect'))
-            : response()->view('auth.login')
-            ;
+        $previousProviderKey = $request->cookie(self::COOKIE_PREVIOUS_PROVIDER) ?: 'rawsoncoza';
 
-        return $response->cookie('auth-seen', 'true', 7200);
+        $providers = collect(config('oauth.providers'))->map(function ($e, $k) use ($previousProviderKey) {
+            return (object) [
+                'name' => $e['name'],
+                'key' => $k,
+                'selected' => $k == $previousProviderKey,
+            ];
+        });
+
+        // return $response->cookie('auth-seen', 'true', CarbonInterval::day()->totalMinutes);
+
+        return view('auth.login', [
+            'providers' => $providers,
+        ]);
     }
 
     public function connect(Request $request)
     {
-        $providerName = $request->input('provider', 'rawsoncoza');
-        $providerConfig = OAuth::getSetConfig($providerName);
+        $providerKey = $request->input('provider', 'rawsoncoza');
+        $providerConfig = OAuth::getSetConfig($providerKey);
+
+        // Cookie::queue('auth-previous-provider', $providerKey, CarbonInterval::month()->totalMinutes);
+        Cookie::queue(self::COOKIE_PREVIOUS_PROVIDER, $providerKey);
 
         return Socialite::driver('google')
             ->with([
@@ -75,8 +90,8 @@ class AuthController extends Controller
 
     public function callback(Request $request)
     {
-        $providerName = Str::of($request->input('hd'))->replace('.', '');
-        OAuth::getSetConfig($providerName);
+        $providerKey = Str::of($request->input('hd'))->replace('.', '');
+        OAuth::getSetConfig($providerKey);
 
         try {
             $u = Socialite::driver('google')->user();

@@ -6,9 +6,9 @@ use Exception;
 
 class OAuth
 {
-    public static function getSetConfig(string $providerName): array
+    public static function getSetConfig(string $providerKey): array
     {
-        $providerConfig = config('oauth.providers.' . $providerName);
+        $providerConfig = config('oauth.providers.' . $providerKey);
         if ($providerConfig == null) {
             throw new Exception('Invalid provider name!');
         }
