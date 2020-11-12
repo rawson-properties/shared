@@ -6,6 +6,7 @@ use Auth;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Cookie;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
