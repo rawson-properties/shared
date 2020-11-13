@@ -4,12 +4,14 @@ namespace Rawson\Shared\RT3Models;
 
 use Cache;
 use Carbon\CarbonInterval;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Rawson\Shared\Database\Factories\PersonFactory;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Person extends Model
 {
-    use FindOrFailCached, GeneratesCacheKeys;
+    use FindOrFailCached, GeneratesCacheKeys, HasFactory;
 
     protected $table = 'person';
     protected $dates = [
@@ -18,6 +20,11 @@ class Person extends Model
     ];
 
     protected $defaultAgent = false;
+
+    protected static function newFactory()
+    {
+        return PersonFactory::new();
+    }
 
     public function getDefaultAgentAttribute(): ?Agent
     {

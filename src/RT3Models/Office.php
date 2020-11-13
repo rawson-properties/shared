@@ -4,17 +4,24 @@ namespace Rawson\Shared\RT3Models;
 
 use DB;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Rawson\Shared\Database\Factories\OfficeFactory;
 use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Office extends Model
 {
-    use FindOrFailCached;
+    use FindOrFailCached, HasFactory;
 
     protected $table = 'office';
     protected $dates = [
         'CREATED',
         'UPDATED',
     ];
+
+    protected static function newFactory()
+    {
+        return OfficeFactory::new();
+    }
 
     public static function findNearestToLatLng(
         float $lat,

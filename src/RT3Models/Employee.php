@@ -2,15 +2,24 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Rawson\Shared\Database\Factories\EmployeeFactory;
 
 class Employee extends Model
 {
+    use HasFactory;
+
     protected $table = 'employee';
     protected $dates = [
         'UPDATED',
     ];
+
+    protected static function newFactory()
+    {
+        return EmployeeFactory::new();
+    }
 
     public function person()
     {
