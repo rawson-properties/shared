@@ -7,9 +7,10 @@
     "require": {
         "fakerphp/faker": "~1.4",
         "php": "^7.4.0",
-        "laravel/framework": "^7.0",
-        "guzzlehttp/guzzle": "~6.0",
-        "laravel/ui": "^2.0",
+        "doctrine/dbal": "^2.12",
+        "laravel/framework": "^8.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/ui": "^3.0",
         "laravel/socialite": "^5.0"
     },
     "require-dev": {

@@ -360,7 +360,7 @@ class CreateRT3Tables extends Migration
             $table->bigInteger('ID', true);
             $table->string('ITEM', 15)->unique();
         });
-        
+
         Schema::connection('rt3')->create('stakeholderdirectors', function (Blueprint $table) {
             $table->bigInteger('ID', true);
             $table->bigInteger('PERSONID')->index();
@@ -1380,7 +1380,7 @@ class CreateRT3Tables extends Migration
             $table->date('EXPIRYDATE');
             $table->date('DATEMET')->nullable();
         });
-        
+
         Schema::connection('rt3')->create('officestatus', function (Blueprint $table) {
             $table->bigInteger('ID', true);
             $table->string('ITEM', 15)->unique();
@@ -1843,7 +1843,7 @@ class CreateRT3Tables extends Migration
             $table->date('referralcreated')->nullable();
             $table->char('direct', 1)->default('n');
         });
-        
+
         Schema::connection('rt3')->create('businesstype', function (Blueprint $table) {
             $table->bigInteger('ID', true);
             $table->string('ITEM', 25)->unique();

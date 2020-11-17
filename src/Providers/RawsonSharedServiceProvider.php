@@ -3,6 +3,8 @@
 namespace Rawson\Shared\Providers;
 
 use App;
+use Illuminate\Database\Eloquent\Factory as ModelFactory;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class RawsonSharedServiceProvider extends ServiceProvider
@@ -23,10 +25,14 @@ class RawsonSharedServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        Paginator::useBootstrap();
+
         if (App::environment('testing')) {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         }
 
-        $this->app->make('Illuminate\Database\Eloquent\Factory')->load(__DIR__ . '/../database/factories');
+        $this->callAfterResolving(ModelFactory::class, function ($factory) {
+            $factory->load(__DIR__ . '/../database/factories');
+        });
     }
 }

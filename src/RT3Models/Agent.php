@@ -5,17 +5,24 @@ namespace Rawson\Shared\RT3Models;
 use Cache;
 use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Rawson\Shared\Database\Factories\AgentFactory;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Rawson\Shared\Models\Traits\FindOrFailCached;
 
 class Agent extends Model
 {
-    use FindOrFailCached, GeneratesCacheKeys;
+    use FindOrFailCached, HasFactory, GeneratesCacheKeys;
 
     protected $table = 'agentlist';
     protected $dates = [
         'UPDATED',
     ];
+
+    protected static function newFactory()
+    {
+        return AgentFactory::new();
+    }
 
     // @TODO: See which projects use this method and refactor in favour of attribute
     public function getName(): string

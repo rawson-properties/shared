@@ -3,10 +3,19 @@
 namespace Rawson\Shared\RT3Models;
 
 use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Rawson\Shared\Database\Factories\SaleFactory;
 
 class Sale extends Model
 {
+    use HasFactory;
+
     protected $table = 'sale';
+
+    protected static function newFactory()
+    {
+        return SaleFactory::new();
+    }
 
     public function scopeFinalOrClosed($q)
     {

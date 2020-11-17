@@ -30,8 +30,9 @@ class AuthController extends Controller
 
         $user->fill([
             'name' => $u->getName(),
+            'last_seen_at' => now(),
             'access_token' => data_get($u, 'token'),
-            'token_created_at' => Carbon::now(),
+            'token_created_at' => now(),
             'token_expires_in' => data_get($u, 'expiresIn', 0),
             'refresh_token' => data_get($u, 'refreshToken', $user->refresh_token),
         ]);
