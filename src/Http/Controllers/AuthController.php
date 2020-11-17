@@ -4,8 +4,6 @@ namespace Rawson\Shared\Http\Controllers;
 
 use Auth;
 use App\Models\User;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use Cookie;
 use Exception;
 use Illuminate\Auth\Events\Registered;
