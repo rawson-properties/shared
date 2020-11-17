@@ -56,19 +56,22 @@ class AuthController extends Controller
     {
         $previousProviderKey = $request->cookie(self::COOKIE_PREVIOUS_PROVIDER) ?: 'rawsoncoza';
 
-        $providers = collect(config('oauth.providers'))->map(function ($e, $k) use ($previousProviderKey) {
-            return (object) [
-                'name' => $e['name'],
-                'key' => $k,
-                'selected' => $k == $previousProviderKey,
-            ];
-        });
+        $providers = collect(config('oauth.providers'))
+            ->filter(function ($e) {
+                return $e['enabled'];
+            })
+            ->map(function ($e, $k) use ($previousProviderKey) {
+                return (object) [
+                    'name' => $e['name'],
+                    'key' => $k,
+                    'selected' => $k == $previousProviderKey,
+                ];
+            });
 
-        // return $response->cookie('auth-seen', 'true', CarbonInterval::day()->totalMinutes);
-
-        return view('auth.login', [
-            'providers' => $providers,
-        ]);
+        return $providers->count() == 1
+            ? redirect()->route('auth.connect', [ 'provider' => $providers->first()->key, ])
+            : view('auth.login', [ 'providers' => $providers, ])
+            ;
     }
 
     public function connect(Request $request)
@@ -76,7 +79,6 @@ class AuthController extends Controller
         $providerKey = $request->input('provider', 'rawsoncoza');
         $providerConfig = OAuth::getSetConfig($providerKey);
 
-        // Cookie::queue('auth-previous-provider', $providerKey, CarbonInterval::month()->totalMinutes);
         Cookie::queue(self::COOKIE_PREVIOUS_PROVIDER, $providerKey);
 
         return Socialite::driver('google')
