@@ -68,10 +68,17 @@ class AuthController extends Controller
                 ];
             });
 
-        return $providers->count() == 1
-            ? redirect()->route('auth.connect', [ 'provider' => $providers->first()->key, ])
-            : view('auth.login', [ 'providers' => $providers, ])
-            ;
+        if ($providers->count() === 1) {
+            $request->merge([
+                'provider' => $providers->first()->key,
+            ]);
+
+            return $this->connect($request);
+        } else {
+            return view('auth.login', [
+                'providers' => $providers,
+            ]);
+        }
     }
 
     public function connect(Request $request)
