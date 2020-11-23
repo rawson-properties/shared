@@ -6,6 +6,7 @@ use Auth;
 use App\Models\User;
 use Cookie;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -104,6 +105,9 @@ class AuthController extends Controller
 
         try {
             $u = Socialite::driver('google')->user();
+        } catch (ClientException $e) {
+            $response = json_decode($e->getResponse()->getBody());
+            abort(401, data_get($response, 'error_description'));
         } catch (InvalidStateException $e) {
             if ($request->has('error_message')) {
                 abort(500, $request->input('error_message'));
