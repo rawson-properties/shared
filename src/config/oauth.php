@@ -27,6 +27,6 @@ return [
         ],
         */
     ],
-    'redirect' => config('app.url') . '/auth/callback',
+    'redirect' => env('OAUTH_REDIRECT'),
     'scopes' => [],
 ];

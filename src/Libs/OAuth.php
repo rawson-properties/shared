@@ -16,7 +16,10 @@ class OAuth
         $providerConfig['redirect'] = config('oauth.redirect');
 
         // Push our config onto `services.google` for Socialite.
-        config([ 'services.google' => $providerConfig, ]);
+        config([
+            'services.google' => $providerConfig,
+            'oauth.redirect' => request()->getHost() . '/auth/callback',
+        ]);
 
         return $providerConfig;
     }
