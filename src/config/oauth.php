@@ -27,6 +27,5 @@ return [
         ],
         */
     ],
-    'redirect' => env('OAUTH_REDIRECT'),
     'scopes' => [],
 ];

@@ -13,12 +13,11 @@ class OAuth
             throw new Exception('Invalid provider name!');
         }
 
-        $providerConfig['redirect'] = config('oauth.redirect');
+        $providerConfig['redirect'] = request()->getHost() . '/auth/callback';
 
         // Push our config onto `services.google` for Socialite.
         config([
             'services.google' => $providerConfig,
-            'oauth.redirect' => request()->getHost() . '/auth/callback',
         ]);
 
         return $providerConfig;
