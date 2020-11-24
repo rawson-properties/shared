@@ -3,6 +3,7 @@
 namespace Rawson\Shared\Libs;
 
 use Exception;
+use Illuminate\Support\Str;
 
 class OAuth
 {
@@ -13,8 +14,8 @@ class OAuth
             throw new Exception('Invalid provider name!');
         }
 
-        $domain = parse_url(url()->current(), PHP_URL_HOST);
-        $providerConfig['redirect'] = sprintf('https://%s/auth/callback', $domain);
+        $sub = Str::of(parse_url(url()->current(), PHP_URL_HOST))->before('rawson.');
+        $providerConfig['redirect'] = sprintf('https://%s%s/auth/callback', $sub, $providerConfig['domain']);
 
         // Push our config onto `services.google` for Socialite.
         config([
