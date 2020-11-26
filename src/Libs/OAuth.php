@@ -15,7 +15,7 @@ class OAuth
         }
 
         $sub = Str::of(parse_url(url()->current(), PHP_URL_HOST))->before('rawson.');
-        $providerConfig['redirect'] = sprintf('https://%s%s/auth/callback', $sub, $providerConfig['domain']);
+        $providerConfig['redirect'] = sprintf('https://%s%s/auth/callback', $sub, $providerConfig['redirectdomain']);
 
         // Push our config onto `services.google` for Socialite.
         config([
