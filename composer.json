@@ -30,7 +30,7 @@
                 "Rawson\\Shared\\Providers\\EventServiceProvider",
                 "Rawson\\Shared\\Providers\\RawsonSharedServiceProvider",
                 "Rawson\\Shared\\Providers\\OAuthServiceProvider",
-                "Rawson\\Shared\\Providers\\PingServiceProvider"
+                "Rawson\\Shared\\Providers\\ZhealthServiceProvider"
             ]
         }
     }
