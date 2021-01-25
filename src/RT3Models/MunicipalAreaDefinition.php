@@ -2,9 +2,19 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Rawson\Shared\Database\Factories\MunicipalAreaDefinitionFactory;
+
 class MunicipalAreaDefinition extends Model
 {
+    use HasFactory;
+
     protected $table = 'municipalareadefinition';
+
+    protected static function newFactory()
+    {
+        return MunicipalAreaDefinitionFactory::new();
+    }
 
     // Relations
     public function province()

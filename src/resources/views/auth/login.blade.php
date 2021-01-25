@@ -1,26 +1,48 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row align-items-center justify-content-center">
-        <div class="col-lg-6 col-12 mt-5">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">How to get connected:</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ config('app.name') }} uses Google Sign-In.</h6>
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center">
+            <div
+                class="col-12 col-sm-8 col-md-8 col-lg-6 col-xl-4 mt-5"
+                style="max-width: 450px"
+            >
+                <div class="card p-4">
+                    <div class="card-body text-center">
+                        <div class="row justify-content-center mb-5">
+                            <div class="col-8">
+                                <img
+                                    src="{{ asset('/images/rawson-tab-logo.png') }}"
+                                    style="max-width: 150px;"
+                                    title=""
+                                >
+                            </div>
+                        </div>
 
-                    <p class="card-text">
-                        Google Sign-In is a secure authentication system. It enables you to sign-in with your Rawson Google account, the same account you already use with Gmail and other Google services.
-                    </p>
+                        <h5 class="font-weight-normal mb-4">Quick question before you log in</h4>
 
-                    <p class="card-text">
-                        When you click the 'Sign-In' button below you will be redirected to a Google Sign-In page which prompts you to enter your <code>@rawson.co.za</code> account details. Once you do so successfully you will be redirected back to {{ config('app.name') }} and be authenticated.
-                    </p>
+                        <p class="card-text text-muted mb-5 text-left">
+                            Please confirm which region you're operating in so we can send you to the correct Google sign in page.
+                        </p>
 
-                    <p class="card-text">
-                        There's no need to create a new account and no new password to remember. Your authentication details are safely handled by Google.
-                    </p>
+                        @foreach ($providers as $e)
+                            @continue(!$e->selected)
 
-                    <a href="{{ route('auth.connect') }}" class="btn btn-primary btn-lg btn-block">Sign-In</a>
+                            <a
+                                href="{{ route('auth.connect', [ 'provider' => $e->key, ]) }}"
+                                class="btn btn-dark btn-block"
+                            >{{ $e->name }}</a>
+                        @endforeach
+
+                        @foreach ($providers as $e)
+                            @continue($e->selected)
+
+                            <a
+                                href="{{ route('auth.connect', [ 'provider' => $e->key, ]) }}"
+                                class="btn btn-outline-dark btn-block"
+                            >{{ $e->name }}</a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>

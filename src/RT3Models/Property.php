@@ -2,9 +2,19 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Rawson\Shared\Database\Factories\PropertyFactory;
+
 class Property extends Model
 {
+    use HasFactory;
+
     protected $table = 'property';
+
+    protected static function newFactory()
+    {
+        return PropertyFactory::new();
+    }
 
     public function getAddress(): string
     {

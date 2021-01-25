@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('login', [ 'as' => 'login', 'uses' => 'AuthController@login', ]);
 Route::post('logout', [ 'as' => 'logout', 'uses' => 'AuthController@logout', ]);
 

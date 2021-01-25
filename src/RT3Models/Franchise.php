@@ -2,12 +2,21 @@
 
 namespace Rawson\Shared\RT3Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Rawson\Shared\Database\Factories\FranchiseFactory;
 
 class Franchise extends Model
 {
+    use HasFactory;
+
     protected $table = 'franchise';
+
+    protected static function newFactory()
+    {
+        return FranchiseFactory::new();
+    }
 
     public function getCountEmployeesAttribute(): int
     {
