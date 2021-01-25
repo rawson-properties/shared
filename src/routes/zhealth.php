@@ -1,6 +1,6 @@
 <?php
 
-Route::get('ping', function () {
+Route::get('zhealth', function () {
     DB::connection(config('database.default'))->select('SELECT NOW()');
 
     if (config('database.connections.rt3')) {
@@ -8,4 +8,4 @@ Route::get('ping', function () {
     }
 
     return response('pong');
-})->name('ping');
+})->name('zhealth');

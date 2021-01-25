@@ -4,8 +4,9 @@ namespace Rawson\Shared\Http\Controllers;
 
 use Auth;
 use App\Models\User;
-use Carbon\Carbon;
+use Cookie;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ use Socialite;
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
+
+    private const COOKIE_PREVIOUS_PROVIDER = 'auth-previous-provider';
 
     public static function handleUser(SocialiteUser $u): User
     {
@@ -50,18 +53,39 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $response = $request->cookie('auth-seen')
-            ? redirect(route('auth.connect'))
-            : response()->view('auth.login')
-            ;
+        $previousProviderKey = $request->cookie(self::COOKIE_PREVIOUS_PROVIDER) ?: 'rawsoncoza';
 
-        return $response->cookie('auth-seen', 'true', 7200);
+        $providers = collect(config('oauth.providers'))
+            ->filter(function ($e) {
+                return $e['enabled'];
+            })
+            ->map(function ($e, $k) use ($previousProviderKey) {
+                return (object) [
+                    'name' => $e['name'],
+                    'key' => $k,
+                    'selected' => $k == $previousProviderKey,
+                ];
+            });
+
+        if ($providers->count() === 1) {
+            $request->merge([
+                'provider' => $providers->first()->key,
+            ]);
+
+            return $this->connect($request);
+        } else {
+            return view('auth.login', [
+                'providers' => $providers,
+            ]);
+        }
     }
 
     public function connect(Request $request)
     {
-        $providerName = $request->input('provider', 'rawsoncoza');
-        $providerConfig = OAuth::getSetConfig($providerName);
+        $providerKey = $request->input('provider', 'rawsoncoza');
+        $providerConfig = OAuth::getSetConfig($providerKey);
+
+        Cookie::queue(self::COOKIE_PREVIOUS_PROVIDER, $providerKey);
 
         return Socialite::driver('google')
             ->with([
@@ -76,11 +100,14 @@ class AuthController extends Controller
 
     public function callback(Request $request)
     {
-        $providerName = Str::of($request->input('hd'))->replace('.', '');
-        OAuth::getSetConfig($providerName);
+        $providerKey = Str::of($request->input('hd'))->replace('.', '');
+        OAuth::getSetConfig($providerKey);
 
         try {
             $u = Socialite::driver('google')->user();
+        } catch (ClientException $e) {
+            $response = json_decode($e->getResponse()->getBody());
+            abort(401, data_get($response, 'error_description'));
         } catch (InvalidStateException $e) {
             if ($request->has('error_message')) {
                 abort(500, $request->input('error_message'));
