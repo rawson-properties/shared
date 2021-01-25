@@ -6,6 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Log;
 
 class AmplitudeEvent implements ShouldQueue
 {
@@ -24,6 +25,10 @@ class AmplitudeEvent implements ShouldQueue
 
     public function handle()
     {
+        if (!config('amplitude.key')) {
+            return Log::debug(sprintf('Skipping %s with no config key', __CLASS__));
+        }
+
         $payload = (object) [
             'api_key' => config('amplitude.key'),
             'events' => [
