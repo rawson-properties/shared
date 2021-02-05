@@ -47,10 +47,6 @@ class AuthController extends Controller
         return $user;
     }
 
-    /*
-     * Set a cookie on this page that says we've seen the message.
-     * If the cookie existed, just redirect to auth without showing.
-     */
     public function login(Request $request)
     {
         $previousProviderKey = $request->cookie(self::COOKIE_PREVIOUS_PROVIDER) ?: 'rawsoncoza';
