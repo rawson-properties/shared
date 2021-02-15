@@ -18,7 +18,7 @@ class LightProxyV2
         return rtrim(config('services.lightproxy-v2.url'), '/') . '/' . ltrim($url, '/');
     }
 
-    public static function get(string $url, array $params = []): object
+    public static function get(string $url, array $params = [])
     {
         if (!config('services.lightproxy-v2')) {
             throw new Exception('No LightProxyV2 config!');
@@ -36,7 +36,7 @@ class LightProxyV2
         return $response->object();
     }
 
-    public static function getCached(string $url, array $params = [], CarbonInterval $interval = null): object
+    public static function getCached(string $url, array $params = [], CarbonInterval $interval = null)
     {
         $interval = $interval ?: CarbonInterval::day();
         $key = self::key([ __FUNCTION__, ], array_merge([ 'url' => $url, ], $params));
