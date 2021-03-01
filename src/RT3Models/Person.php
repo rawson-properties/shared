@@ -5,7 +5,9 @@ namespace Rawson\Shared\RT3Models;
 use Cache;
 use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Rawson\Shared\Database\Factories\PersonFactory;
+use Rawson\Shared\Libs\Img;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Rawson\Shared\Models\Traits\FindOrFailCached;
 
@@ -45,6 +47,20 @@ class Person extends Model
         }
 
         return $this->defaultAgent;
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return trim(sprintf('%s %s', $this->FIRSTNAME, $this->LASTNAME));
+    }
+
+    public function getWhatsappMobileAttribute(): ?string
+    {
+        return Str::of($this->CELLPHONE)
+            ->after('0')
+            ->start('27')
+            ->replaceMatches('/[^0-9]++/', '')
+            ;
     }
 
     public static function defaultAgentForPersonID(int $id): ?Agent
