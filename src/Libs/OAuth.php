@@ -14,8 +14,15 @@ class OAuth
             throw new Exception('Invalid provider name!');
         }
 
+        $scheme = parse_url(url()->current(), PHP_URL_SCHEME);
         $sub = Str::of(parse_url(url()->current(), PHP_URL_HOST))->before('rawson.');
-        $providerConfig['redirect'] = sprintf('https://%s%s/auth/callback', $sub, $providerConfig['redirectdomain']);
+
+        $providerConfig['redirect'] = sprintf(
+            '%s://%s%s/auth/callback',
+            $scheme,
+            $sub,
+            $providerConfig['redirectdomain']
+        );
 
         // Push our config onto `services.google` for Socialite.
         config([
