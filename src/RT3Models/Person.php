@@ -7,7 +7,6 @@ use Carbon\CarbonInterval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Rawson\Shared\Database\Factories\PersonFactory;
-use Rawson\Shared\Libs\Img;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 use Rawson\Shared\Models\Traits\FindOrFailCached;
 
