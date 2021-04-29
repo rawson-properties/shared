@@ -82,6 +82,16 @@ class SellerList extends Model
         return $this->belongsTo(Property::class, 'PROPERTYID', 'ID');
     }
 
+    public function sales()
+    {
+        return $this->hasMany(Sale::class, 'SELLERLISTID', 'ID');
+    }
+
+    public function sellerListHistory()
+    {
+        return $this->hasMany(SellerListHistory::class, 'SELLERLISTID', 'ID');
+    }
+
     public function sellerListImageRefs()
     {
         return $this->hasMany(SellerListImageRef::class, 'SELLERLISTID', 'ID')
