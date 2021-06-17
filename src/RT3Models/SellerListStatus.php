@@ -12,4 +12,5 @@ class SellerListStatus extends Model
     const SOLDBYRAWSON = 4;
     const SOLDBYCOMPETITOR = 5;
     const GENERATED = 6;
+    const COMPETITORSTOCK = 7;
 }
