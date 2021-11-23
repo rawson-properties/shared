@@ -33,10 +33,10 @@ class LightProxyV2
 
         switch ($method) {
             case 'get':
-                $response = Http::withHeaders(['Ocp-Apim-Subscription-Key' => config('services.lightproxy-v2.token')])->get($url);
+                $response = Http::withToken(config('services.lightproxy-v2.token'))->get($url);
                 break;
             case 'post':
-                $response = Http::withHeaders(['Ocp-Apim-Subscription-Key' => config('services.lightproxy-v2.token')])->post($url, $payload);
+                $response = Http::withToken(config('services.lightproxy-v2.token'))->post($url, $payload);
                 break;
             default:
                 throw new Exception('Not a valid request method!');
