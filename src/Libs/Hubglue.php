@@ -13,13 +13,6 @@ class Hubglue
 
     private static function getToken(): string
     {
-        $key = self::key([
-            'getToken',
-        ], [
-            config('services.hubglue.client_id'),
-            config('services.hubglue.client_secret'),
-        ]);
-
         $guzzle = new GuzzleClient(['verify' => config('app.env') !== 'local']);
 
         $response = $guzzle->post(config('services.hubglue.url').'/oauth/token', [

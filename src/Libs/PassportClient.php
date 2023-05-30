@@ -26,21 +26,22 @@ class PassportClient
 
     private function getToken(): string
     {
-        $key = self::key([ 'getToken', ], [ $this->baseURL, $this->clientID, $this->clientSecret, ]);
+        $guzzle = new GuzzleClient();
+        $response = $guzzle->post($this->baseURL.'/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'client_credentials',
+                'client_id' => $this->clientID,
+                'client_secret' => $this->clientSecret,
+            ],
+        ]);
 
-        return Cache::remember($key, CarbonInterval::day(), function () {
-            $guzzle = new GuzzleClient();
-            $response = $guzzle->post($this->baseURL . '/oauth/token', [
-                'form_params' => [
-                    'grant_type' => 'client_credentials',
-                    'client_id' => $this->clientID,
-                    'client_secret' => $this->clientSecret,
-                ],
-            ]);
+        $json = json_decode((string) $response->getBody());
 
-            $json = json_decode((string) $response->getBody());
-            return object_get($json, 'access_token');
-        });
+        return object_get($json, 'access_token');
+        // $key = self::key([ 'getToken', ], [ $this->baseURL, $this->clientID, $this->clientSecret, ]);
+
+        // return Cache::remember($key, CarbonInterval::day(), function () {
+        // });
     }
 
     public function get(string $endpoint, int $timeout = 5)
@@ -48,11 +49,11 @@ class PassportClient
         $guzzle = new GuzzleClient();
         $response = $guzzle->request(
             'GET',
-            $this->baseURL . $endpoint,
+            $this->baseURL.$endpoint,
             [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->getToken(),
+                    'Authorization' => 'Bearer '.$this->getToken(),
                     'Content-Type' => 'application/json',
                 ],
                 'timeout' => $timeout,
@@ -67,12 +68,12 @@ class PassportClient
         $guzzle = new GuzzleClient();
         $response = $guzzle->request(
             'POST',
-            $this->baseURL . $endpoint,
+            $this->baseURL.$endpoint,
             [
                 'json' => $data,
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . $this->getToken(),
+                    'Authorization' => 'Bearer '.$this->getToken(),
                     'Content-Type' => 'application/json',
                 ],
             ]
