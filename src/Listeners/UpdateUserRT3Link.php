@@ -14,8 +14,10 @@ class UpdateUserRT3Link
     {
         $user = $event->user;
         $rt3Person = RT3Person
-            ::where('email', $user->email)
+            ::select([ 'person.*' ])
+            ->where('email', $user->email)
             ->where('JOBTITLEID', '!=', RT3JobTitle::NONE)
+            ->join('employee', 'employee.PERSONID', 'person.ID')
             ->orderBy('UPDATED', 'DESC')
             ->first()
             ;
