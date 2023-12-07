@@ -11,6 +11,11 @@ class Model extends BaseModel
     protected $primaryKey = 'ID';
     protected $connection = 'rt3';
 
+    public function __construct()
+    {
+        $this->connection = env('RT3_DB_CONNECTION', 'rt3');
+    }
+
     public $timestamps = false;
 
     public static function disabled()
