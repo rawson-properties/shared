@@ -121,4 +121,14 @@ class Agent extends Model
             ->where('person.FULLNAME', $fullName)
             ;
     }
+
+    public function findByEmail(string $email)
+    {
+        return $this->join('employee', 'employee.ID', 'agentlist.EMPLOYEEID')
+            ->join('person', 'person.ID', 'employee.PERSONID')
+            ->where('agentlist.ACTIVE', 'y')
+            ->where('agentlist.DEFAULTOFFICE', 'y')
+            ->where('EMAIL', $email)
+            ->first();
+    }
 }
