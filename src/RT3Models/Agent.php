@@ -124,7 +124,8 @@ class Agent extends Model
 
     public static function findByEmail(string $email)
     {
-        return self::join('employee', 'employee.ID', 'agentlist.EMPLOYEEID')
+        return self::select('agentlist.*')
+            ->join('employee', 'employee.ID', 'agentlist.EMPLOYEEID')
             ->join('person', 'person.ID', 'employee.PERSONID')
             ->where('agentlist.ACTIVE', 'y')
             ->where('agentlist.DEFAULTOFFICE', 'y')
