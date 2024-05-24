@@ -2,9 +2,9 @@
 
 namespace Rawson\Shared\Libs;
 
-use Cache;
 use Carbon\CarbonInterval;
 use GuzzleHttp\Client as GuzzleClient;
+use Illuminate\Support\Facades\Cache;
 use Rawson\Shared\Libs\Traits\GeneratesCacheKeys;
 
 class PassportClient
@@ -26,22 +26,22 @@ class PassportClient
 
     private function getToken(): string
     {
-        $guzzle = new GuzzleClient();
-        $response = $guzzle->post($this->baseURL.'/oauth/token', [
-            'form_params' => [
-                'grant_type' => 'client_credentials',
-                'client_id' => $this->clientID,
-                'client_secret' => $this->clientSecret,
-            ],
-        ]);
+        $key = self::key([], [ $this->baseURL, $this->clientID, $this->clientSecret, ]);
 
-        $json = json_decode((string) $response->getBody());
+        return Cache::remember($key, CarbonInterval::day(), function () {
+            $guzzle = new GuzzleClient();
+            $response = $guzzle->post($this->baseURL . '/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => $this->clientID,
+                    'client_secret' => $this->clientSecret,
+                ],
+            ]);
 
-        return object_get($json, 'access_token');
-        // $key = self::key([ 'getToken', ], [ $this->baseURL, $this->clientID, $this->clientSecret, ]);
+            $json = json_decode((string) $response->getBody());
 
-        // return Cache::remember($key, CarbonInterval::day(), function () {
-        // });
+            return object_get($json, 'access_token');
+        });
     }
 
     public function get(string $endpoint, int $timeout = 5)
